@@ -23,6 +23,7 @@
 #  
 
 import sys
+import string
 import getopt
 import argparse
 import os
@@ -30,18 +31,18 @@ import json
 import codecs
 import re
 
-def process_file(filename, outdir):
+def process_file(filename, outdir, keywords):
 	print "Processing: " + filename
 	file = codecs.open(filename, encoding = 'utf-8')
 	if filename.endswith('.txt'):
-		process_twitter(file, outdir)
+		process_twitter(file, outdir, keywords)
 	elif filename.endswith('.dir'):
 		process_followers(file, outdir)
 	else:
 		print "...not a .txt or .dir, skipping."
 		
 
-def process_twitter(file, outdir):
+def process_twitter(file, outdir, keywords):
 	tweetContent = codecs.open(os.path.join(outdir, 'tweetContent.txt'),
 		encoding = 'utf-8', mode = 'w')
 	tweetUser = codecs.open(os.path.join(outdir, 'tweetUser.txt'),
@@ -62,15 +63,35 @@ def process_twitter(file, outdir):
 		encoding = 'utf-8', mode = 'w')
 	retweet = codecs.open(os.path.join(outdir, 'retweet.txt'),
 		encoding = 'utf-8', mode = 'w')
+	containsKeyword = codecs.open(os.path.join(outdir, 'containsKeyword.txt'),
+		encoding = 'utf-8', mode = 'w')
+
+	seenTweets = set()
+
+	seenUsers = set()
+
 	for line in file:
 		# Read in line and parse as JSON
-		tweet = json.loads(line)
+		try:
+			tweet = json.loads(line)
+		except ValueError:
+			print "Could not read entry"
+			print line
+			continue
 		
 		# Pull out ID for tweet
 		if tweet.has_key('embers_id'):
 			tweetID = tweet['embers_id']
+		elif tweet.has_key('embersId'):
+			tweetID = tweet['embersId']
 		else:
 			tweetID = tweet['embersID']
+
+		if tweetID in seenTweets:
+			print "Already saw tweet %s" % tweetID
+			continue
+		else:
+			seenTweets.add(tweetID)
 		
 		# Write out tweetID, tweet
 		content = re.sub('[\n\t]', ' ', tweet['interaction']['content'])
@@ -109,10 +130,15 @@ def process_twitter(file, outdir):
 			tweetGeocode.write(tweetID + '\t' + str(latitude) + ',' + str(longitude) + '\n')
 		
 		# Write out users' location information
-		if tweet['twitter'].has_key('user'):
-			if (tweet['twitter']['user'].has_key('location')):
-				location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
-				userLocation.write(user + '\t' + location + '\n')
+		if user not in seenUsers:
+			seenUsers.add(user)
+			if tweet['twitter'].has_key('user'):
+				if (tweet['twitter']['user'].has_key('location')):
+					location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
+					if len(location.strip()) > 0:
+						userLocation.write(user + '\t' + location + '\n')
+					else:
+						print "Found user with all whitespace location"
 		
 		# Write out mentions information
 		if tweet['twitter'].has_key('mentions'):
@@ -124,7 +150,15 @@ def process_twitter(file, outdir):
 			originalAuthor = tweet['twitter']['retweeted']['user']['screen_name']
 			retweet.write(tweetID + '\t' + originalAuthor + '\n')
 		
-		# TODO: Add containsKeyword parsing
+		# Write out keywords
+		cleanedContent = re.sub("[^_a-zA-Z0-9\s]", "", content.strip().lower().encode('ascii', 'ignore'))
+		tokens = cleanedContent.split()
+		seenWords = set()
+ 		for word in tokens:
+			if word in keywords and word not in seenWords:
+				containsKeyword.write(tweetID + '\t' + word + '\n')
+				seenWords.add(word)
+
 	
 def process_followers(file, outdir):
 	# TODO: Implement follower graph parsing.
@@ -135,19 +169,24 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("data_directory", help="the data directory of the EMBERS OSI twitter data")
 	parser.add_argument("output_directory", help="the directory to output predicates")
-	# TODO: Add keyword dictionary argument
+	parser.add_argument("keyword_file", help="file containing keywords to check for")
 	
 	args = parser.parse_args();
 	
 	directory = args.data_directory
 	output = args.output_directory
+	keywordFile = args.keyword_file
 	print "Data directory: " + directory
 	print "Output directory: " + output
 	
+	# load keywords
+	keywords = set()
+	for word in open(keywordFile, 'r'):
+		keywords.add(word.strip())
 	
 	for file in os.listdir(directory):
-		process_file(os.path.join(directory, file), output)
-	
+		process_file(os.path.join(directory, file), output, keywords)
+
 	return 0;
 
 if __name__ == '__main__':
