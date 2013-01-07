@@ -23,6 +23,7 @@
 #  
 
 import sys
+import string
 import getopt
 import argparse
 import os
@@ -30,18 +31,18 @@ import json
 import codecs
 import re
 
-def process_file(filename, outdir):
+def process_file(filename, outdir, keywords):
 	print "Processing: " + filename
 	file = codecs.open(filename, encoding = 'utf-8')
 	if filename.endswith('.txt'):
-		process_twitter(file, outdir)
+		process_twitter(file, outdir, keywords)
 	elif filename.endswith('.dir'):
 		process_followers(file, outdir)
 	else:
 		print "...not a .txt or .dir, skipping."
 		
 
-def process_twitter(file, outdir):
+def process_twitter(file, outdir, keywords):
 	tweetContent = codecs.open(os.path.join(outdir, 'tweetContent.txt'),
 		encoding = 'utf-8', mode = 'w')
 	tweetUser = codecs.open(os.path.join(outdir, 'tweetUser.txt'),
@@ -61,6 +62,8 @@ def process_twitter(file, outdir):
 	mentions = codecs.open(os.path.join(outdir, 'mentions.txt'),
 		encoding = 'utf-8', mode = 'w')
 	retweet = codecs.open(os.path.join(outdir, 'retweet.txt'),
+		encoding = 'utf-8', mode = 'w')
+	containsKeyword = codecs.open(os.path.join(outdir, 'containsKeyword.txt'),
 		encoding = 'utf-8', mode = 'w')
 
 	seenTweets = set()
@@ -147,7 +150,15 @@ def process_twitter(file, outdir):
 			originalAuthor = tweet['twitter']['retweeted']['user']['screen_name']
 			retweet.write(tweetID + '\t' + originalAuthor + '\n')
 		
-		# TODO: Add containsKeyword parsing
+		# Write out keywords
+		cleanedContent = re.sub("[^_a-zA-Z0-9\s]", "", content.strip().lower().encode('ascii', 'ignore'))
+		tokens = cleanedContent.split()
+		seenWords = set()
+ 		for word in tokens:
+			if word in keywords and word not in seenWords:
+				containsKeyword.write(tweetID + '\t' + word + '\n')
+				seenWords.add(word)
+
 	
 def process_followers(file, outdir):
 	# TODO: Implement follower graph parsing.
@@ -158,18 +169,23 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("data_directory", help="the data directory of the EMBERS OSI twitter data")
 	parser.add_argument("output_directory", help="the directory to output predicates")
-	# TODO: Add keyword dictionary argument
+	parser.add_argument("keyword_file", help="file containing keywords to check for")
 	
 	args = parser.parse_args();
 	
 	directory = args.data_directory
 	output = args.output_directory
+	keywordFile = args.keyword_file
 	print "Data directory: " + directory
 	print "Output directory: " + output
 	
+	# load keywords
+	keywords = set()
+	for word in open(keywordFile, 'r'):
+		keywords.add(word.strip())
 	
 	for file in os.listdir(directory):
-		process_file(os.path.join(directory, file), output)
+		process_file(os.path.join(directory, file), output, keywords)
 
 	return 0;
 
