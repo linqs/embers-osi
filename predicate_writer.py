@@ -62,15 +62,33 @@ def process_twitter(file, outdir):
 		encoding = 'utf-8', mode = 'w')
 	retweet = codecs.open(os.path.join(outdir, 'retweet.txt'),
 		encoding = 'utf-8', mode = 'w')
+
+	seenTweets = set()
+
+	seenUsers = set()
+
 	for line in file:
 		# Read in line and parse as JSON
-		tweet = json.loads(line)
+		try:
+			tweet = json.loads(line)
+		except ValueError:
+			print "Could not read entry"
+			print line
+			continue
 		
 		# Pull out ID for tweet
 		if tweet.has_key('embers_id'):
 			tweetID = tweet['embers_id']
+		elif tweet.has_key('embersId'):
+			tweetID = tweet['embersId']
 		else:
 			tweetID = tweet['embersID']
+
+		if tweetID in seenTweets:
+			print "Already saw tweet %s" % tweetID
+			continue
+		else:
+			seenTweets.add(tweetID)
 		
 		# Write out tweetID, tweet
 		content = re.sub('[\n\t]', ' ', tweet['interaction']['content'])
@@ -109,10 +127,15 @@ def process_twitter(file, outdir):
 			tweetGeocode.write(tweetID + '\t' + str(latitude) + ',' + str(longitude) + '\n')
 		
 		# Write out users' location information
-		if tweet['twitter'].has_key('user'):
-			if (tweet['twitter']['user'].has_key('location')):
-				location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
-				userLocation.write(user + '\t' + location + '\n')
+		if user not in seenUsers:
+			seenUsers.add(user)
+			if tweet['twitter'].has_key('user'):
+				if (tweet['twitter']['user'].has_key('location')):
+					location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
+					if len(location.strip()) > 0:
+						userLocation.write(user + '\t' + location + '\n')
+					else:
+						print "Found user with all whitespace location"
 		
 		# Write out mentions information
 		if tweet['twitter'].has_key('mentions'):
@@ -147,7 +170,7 @@ def main():
 	
 	for file in os.listdir(directory):
 		process_file(os.path.join(directory, file), output)
-	
+
 	return 0;
 
 if __name__ == '__main__':
