@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  untitled.py
+#  keyword_analysis.py
 #  
 #  Copyright 2013 Eric Norris <enorris@cs.umd.edu>
 #  
@@ -40,8 +40,6 @@ def main():
 	# Read in actual keywords
 	keywords = set([word.strip() for word in open(keyword_file)])
 	
-	results = dict()
-	
 	print 'Threshold:\tPrecision:\tRecall'
 	# Iterate over range of thresholds (from 0.1 to 1.0)
 	for threshold in [x * 0.1 for x in range(1, 11)]:
@@ -63,6 +61,7 @@ def main():
 		
 		# Pretty print result
 		print '%.1f\t\t%.5f\t\t%.5f' % (threshold,precision,recall)
+	
 	return 0
 
 if __name__ == '__main__':
