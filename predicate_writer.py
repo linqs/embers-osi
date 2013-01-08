@@ -171,7 +171,7 @@ def main():
 	parser.add_argument("output_directory", help="the directory to output predicates")
 	parser.add_argument("keyword_file", help="file containing keywords to check for")
 	
-	args = parser.parse_args();
+	args = parser.parse_args()
 	
 	directory = args.data_directory
 	output = args.output_directory
