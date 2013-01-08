@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  untitled.py
+#  geocode_analysis.py
 #  
 #  Copyright 2013 Eric Norris <enorris@cs.umd.edu>
 #  
@@ -42,9 +42,6 @@ def main():
 	geofile = args.geolocation_prediction
 	predictions = defaultdict(list)
 	results = dict()
-	
-	# courtesy of http://www.regular-expressions.info/
-	floatRegex = '([-+]?[0-9]*\.?[0-9]+)' 
 	
 	for line in open(geofile):
 		tokens = re.split('\t', line)
