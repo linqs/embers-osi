@@ -50,7 +50,7 @@ def main():
 			print '%.1f\t\t%.5f\t\t%.5f' % (threshold,0.0,0.0)
 			continue
 
-		# Calculate true positives, false postives, etc
+		# Calculate true positives, false postives, and false negatives
 		tp = float(len(predictionSet.intersection(keywords)))
 		fp = float(len(predictionSet.difference(keywords)))
 		fn = float(len(keywords.difference(predictionSet)))
