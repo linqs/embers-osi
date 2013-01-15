@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  geocode_analysis.py
+#  geocode_normalizer.py
 #  
 #  Copyright 2013 Eric Norris <enorris@cs.umd.edu>
 #  
