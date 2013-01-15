@@ -102,7 +102,7 @@ def main():
 	# Print result calculations
 	print "Average: \t%f" % avg
 	print "Std. Dev: \t%f" % std
-	print "Precidion: \t%f" % precision
+	print "Precision: \t%f" % precision
 	print "Recall: \t%f" % recall
 	
 	# Write out difference to file
