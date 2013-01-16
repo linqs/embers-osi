@@ -31,139 +31,158 @@ import json
 import codecs
 import re
 
-def process_file(filename, outdir, keywords):
-	print "Processing: " + filename
-	file = codecs.open(filename, encoding = 'utf-8')
-	if filename.endswith('.txt'):
-		process_twitter(file, outdir, keywords)
-	elif filename.endswith('.dir'):
-		process_followers(file, outdir)
-	else:
-		print "...not a .txt or .dir, skipping."
-		
-
-def process_twitter(file, outdir, keywords):
-	tweetContent = codecs.open(os.path.join(outdir, 'tweetContent.txt'),
-		encoding = 'utf-8', mode = 'w')
-	tweetUser = codecs.open(os.path.join(outdir, 'tweetUser.txt'),
-		encoding = 'utf-8', mode = 'w')
-	positiveSentiment = codecs.open(os.path.join(outdir, 'positiveSentiment.txt'),
-		encoding = 'utf-8', mode = 'w')
-	negativeSentiment = codecs.open(os.path.join(outdir, 'negativeSentiment.txt'),
-		encoding = 'utf-8', mode = 'w')
-	containsHashtag = codecs.open(os.path.join(outdir, 'containsHashtag.txt'),
-		encoding = 'utf-8', mode = 'w')
-	tweetPlace = codecs.open(os.path.join(outdir, 'tweetPlace.txt'),
-		encoding = 'utf-8', mode = 'w')
-	tweetGeocode = codecs.open(os.path.join(outdir, 'tweetGeocode.txt'),
-		encoding = 'utf-8', mode = 'w')
-	userLocation = codecs.open(os.path.join(outdir, 'userLocation.txt'),
-		encoding = 'utf-8', mode = 'w')
-	mentions = codecs.open(os.path.join(outdir, 'mentions.txt'),
-		encoding = 'utf-8', mode = 'w')
-	retweet = codecs.open(os.path.join(outdir, 'retweet.txt'),
-		encoding = 'utf-8', mode = 'w')
-	containsKeyword = codecs.open(os.path.join(outdir, 'containsKeyword.txt'),
-		encoding = 'utf-8', mode = 'w')
-
-	seenTweets = set()
-
-	seenUsers = set()
-
-	for line in file:
-		# Read in line and parse as JSON
-		try:
-			tweet = json.loads(line)
-		except ValueError:
-			print "Could not read entry"
-			print line
-			continue
-		
-		# Pull out ID for tweet
-		if tweet.has_key('embers_id'):
-			tweetID = tweet['embers_id']
-		elif tweet.has_key('embersId'):
-			tweetID = tweet['embersId']
-		else:
-			tweetID = tweet['embersID']
-
-		if tweetID in seenTweets:
-			print "Already saw tweet %s" % tweetID
-			continue
-		else:
-			seenTweets.add(tweetID)
-		
-		# Write out tweetID, tweet
-		content = re.sub('[\n\t]', ' ', tweet['interaction']['content'])
-		tweetContent.write(tweetID + '\t' + content + '\n')
-		
-		# Write out tweetID, user
-		user = tweet['interaction']['author']['username']
-		tweetUser.write(tweetID + '\t' + user + '\n')
-		
-		# Write out the sentiment
-		if tweet.has_key('salience'):
-			sentiment = float(tweet['salience']['content']['sentiment'])
-			normalized = sentiment / 20
-			if (normalized < 0):
-				negativeSentiment.write(tweetID + '\t' + str(abs(normalized)) + '\n')
-			elif (normalized > 0):
-				positiveSentiment.write(tweetID + '\t' + str(normalized) + '\n')
-			# Do not write out zero-valued sentiments
-		
-		# Write out hashtag information
-		hashtagPattern = re.compile('[#]+[A-Za-z0-9-_]+')
-		foundTags = dict()
-		for match in hashtagPattern.findall(content):
-			if not foundTags.has_key(match):
-				containsHashtag.write(tweetID + '\t' + match + '\n')
-				foundTags[match] = True
-		
-		# Write out tweet place information
-		if tweet['twitter'].has_key('place'):
-			 tweetPlace.write(tweetID + '\t' + tweet['twitter']['place']['full_name'] + '\n')
-		
-		# Write out tweet geolocation information
-		if tweet['twitter'].has_key('geo'):
-			latitude = tweet['twitter']['geo']['latitude']
-			longitude = tweet['twitter']['geo']['longitude']
-			tweetGeocode.write(tweetID + '\t' + str(latitude) + ',' + str(longitude) + '\n')
-		
-		# Write out users' location information
-		if user not in seenUsers:
-			seenUsers.add(user)
-			if tweet['twitter'].has_key('user'):
-				if (tweet['twitter']['user'].has_key('location')):
-					location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
-					if len(location.strip()) > 0:
-						userLocation.write(user + '\t' + location + '\n')
-					else:
-						print "Found user with all whitespace location"
-		
-		# Write out mentions information
-		if tweet['twitter'].has_key('mentions'):
-			for otherUser in tweet['twitter']['mentions']:
-				mentions.write(tweetID + '\t' + otherUser + '\n')
-		
-		# Write out retweet information
-		if tweet['twitter'].has_key('retweeted'):
-			originalAuthor = tweet['twitter']['retweeted']['user']['screen_name']
-			retweet.write(tweetID + '\t' + originalAuthor + '\n')
-		
-		# Write out keywords
-		cleanedContent = re.sub("[^_a-zA-Z0-9\s]", "", content.strip().lower().encode('ascii', 'ignore'))
-		tokens = cleanedContent.split()
-		seenWords = set()
- 		for word in tokens:
-			if word in keywords and word not in seenWords:
-				containsKeyword.write(tweetID + '\t' + word + '\n')
-				seenWords.add(word)
-
+class TwitterAnalyzer:
+	def __init__(self, outdir, keywords):
+		self.tweetContent = codecs.open(os.path.join(outdir, 'tweetContent.txt'), encoding='utf-8', mode='w')
+		self.tweetUser = codecs.open(os.path.join(outdir, 'tweetUser.txt'), encoding='utf-8', mode='w')
+		self.negativeSentiment = codecs.open(os.path.join(outdir, 'negativeSentiment.txt'), encoding='utf-8', mode='w')
+		self.positiveSentiment = codecs.open(os.path.join(outdir, 'positiveSentiment.txt'), encoding='utf-8', mode='w')
+		self.containsHashtag = codecs.open(os.path.join(outdir, 'containsHashtag.txt'), encoding='utf-8', mode='w')
+		self.tweetPlace = codecs.open(os.path.join(outdir, 'tweetPlace.txt'), encoding='utf-8', mode='w')
+		self.tweetGeocode = codecs.open(os.path.join(outdir, 'tweetGeocode.txt'), encoding='utf-8', mode='w')
+		self.userLocation = codecs.open(os.path.join(outdir, 'userLocation.txt'), encoding='utf-8', mode='w')
+		self.mentions = codecs.open(os.path.join(outdir, 'mentions.txt'), encoding='utf-8', mode='w')
+		self.retweet = codecs.open(os.path.join(outdir, 'retweet.txt'), encoding='utf-8', mode='w')
+		self.containsKeyword = codecs.open(os.path.join(outdir, 'containsKeyword.txt'), encoding='utf-8', mode='w')
+		self.followers = codecs.open(os.path.join(outdir, 'followers.txt'), encoding='utf-8', mode='w')
+		self.keywords = keywords
 	
-def process_followers(file, outdir):
-	# TODO: Implement follower graph parsing.
-	print "TODO: Implement follower graph parsing."
-	return 1;
+	def process_file(self, filename):
+		print "Processing: " + filename
+		inputfile = codecs.open(filename, encoding='utf-8')
+		if filename.endswith('.txt'):
+			#self.__process_twitter(inputfile)
+			""""""
+		elif filename.endswith('.dir'):
+			self.__process_followers(inputfile)
+		else:
+			print "...not a .txt or .dir, skipping."
+		
+	def close(self):
+		# Close files
+		self.tweetContent.close()
+		self.tweetUser.close()
+		self.negativeSentiment.close()
+		self.positiveSentiment.close()
+		self.containsHashtag.close()
+		self.tweetPlace.close()
+		self.tweetGeocode.close()
+		self.userLocation.close()
+		self.mentions.close()
+		self.retweet.close()
+		self.containsKeyword.close()
+	
+	def __process_twitter(self, inputfile):
+		seenTweets = set()
+		seenUsers = set()
+		
+		# RegEx for detecting hashtags
+		hashtagPattern = re.compile('[#]+[A-Za-z0-9-_]+')
+		
+		for line in inputfile:
+			# Read in line and parse as JSON
+			try:
+				tweet = json.loads(line)
+			except ValueError:
+				print "Could not read entry"
+				print line
+				continue
+			
+			# Pull out ID for tweet
+			if tweet.has_key('embers_id'):
+				tweetID = tweet['embers_id']
+			elif tweet.has_key('embersId'):
+				tweetID = tweet['embersId']
+			else:
+				tweetID = tweet['embersID']
+			
+			if tweetID in seenTweets:
+				print "Already saw tweet %s" % tweetID
+				continue
+			else:
+				seenTweets.add(tweetID)
+			
+			# Write out tweetID, tweet
+			content = re.sub('[\n\t]', ' ', tweet['interaction']['content'])
+			self.tweetContent.write(tweetID + '\t' + content + '\n')
+			
+			# Write out tweetID, user
+			user = tweet['interaction']['author']['username']
+			self.tweetUser.write(tweetID + '\t' + user + '\n')
+			
+			# Write out the sentiment
+			if tweet.has_key('salience'):
+				sentiment = float(tweet['salience']['content']['sentiment'])
+				normalized = sentiment / 20
+				if (normalized < 0):
+					self.negativeSentiment.write(tweetID + '\t' + str(abs(normalized)) + '\n')
+				elif (normalized > 0):
+					self.positiveSentiment.write(tweetID + '\t' + str(normalized) + '\n')
+				# Do not write out zero-valued sentiments
+			
+			# Write out hashtag information
+			foundTags = dict()
+			for match in hashtagPattern.findall(content):
+				if not foundTags.has_key(match):
+					self.containsHashtag.write(tweetID + '\t' + match + '\n')
+					foundTags[match] = True
+			
+			# Write out tweet place information
+			if tweet['twitter'].has_key('place'):
+				self.tweetPlace.write(tweetID + '\t' + tweet['twitter']['place']['full_name'] + '\n')
+			
+			# Write out tweet geolocation information
+			if tweet['twitter'].has_key('geo'):
+				latitude = tweet['twitter']['geo']['latitude']
+				longitude = tweet['twitter']['geo']['longitude']
+				self.tweetGeocode.write(tweetID + '\t' + str(latitude) + ',' + str(longitude) + '\n')
+			
+			# Write out users' location information
+			if user not in seenUsers:
+				seenUsers.add(user)
+				if tweet['twitter'].has_key('user'):
+					if (tweet['twitter']['user'].has_key('location')):
+						location = re.sub('[\n\t]', ' ', tweet['twitter']['user']['location'])
+						if len(location.strip()) > 0:
+							self.userLocation.write(user + '\t' + location + '\n')
+						else:
+							print "Found user with all whitespace location"
+			
+			# Write out mentions information
+			if tweet['twitter'].has_key('mentions'):
+				for otherUser in tweet['twitter']['mentions']:
+					self.mentions.write(tweetID + '\t' + otherUser + '\n')
+			
+			# Write out retweet information
+			if tweet['twitter'].has_key('retweeted'):
+				originalAuthor = tweet['twitter']['retweeted']['user']['screen_name']
+				self.retweet.write(tweetID + '\t' + originalAuthor + '\n')
+			
+			# Write out keywords
+			cleanedContent = re.sub("[^_a-zA-Z0-9\s]", "", content.strip().lower().encode('ascii', 'ignore'))
+			tokens = cleanedContent.split()
+			seenWords = set()
+			for word in tokens:
+				if word in self.keywords and word not in seenWords:
+					self.containsKeyword.write(tweetID + '\t' + word + '\n')
+					seenWords.add(word)
+			
+			# Finished
+	
+	def __process_followers(self, inputfile):
+		userPattern = re.compile('(\w+) (\d+)')
+		user = None
+		for line in inputfile:
+			if user is None:
+				match = userPattern.match(line)
+				user = match.group(1)
+				count = int(match.group(2))
+			else:
+				count -= 1
+				self.followers.write(user + '\t' + line.strip() + '\n')
+			
+			if count == 0:
+				user = None
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -175,18 +194,20 @@ def main():
 	
 	directory = args.data_directory
 	output = args.output_directory
-	keywordFile = args.keyword_file
+	keywordfile = args.keyword_file
 	print "Data directory: " + directory
 	print "Output directory: " + output
 	
 	# load keywords
-	keywords = set()
-	for word in open(keywordFile, 'r'):
-		keywords.add(word.strip())
+	keywords = set([word.strip() for word in open(keywordfile)])
 	
-	for file in os.listdir(directory):
-		process_file(os.path.join(directory, file), output, keywords)
-
+	analyzer = TwitterAnalyzer(output, keywords)
+	
+	for inputfile in os.listdir(directory):
+		analyzer.process_file(os.path.join(directory, inputfile))
+	
+	analyzer.close()
+	
 	return 0;
 
 if __name__ == '__main__':
