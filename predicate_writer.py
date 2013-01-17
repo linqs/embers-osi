@@ -45,14 +45,14 @@ class TwitterAnalyzer:
 		self.retweet = codecs.open(os.path.join(outdir, 'retweet.txt'), encoding='utf-8', mode='w')
 		self.containsKeyword = codecs.open(os.path.join(outdir, 'containsKeyword.txt'), encoding='utf-8', mode='w')
 		self.followers = codecs.open(os.path.join(outdir, 'followers.txt'), encoding='utf-8', mode='w')
+		self.username = codecs.open(os.path.join(outdir, 'usernames.txt'), encoding='utf-8', mode='w')
 		self.keywords = keywords
 	
 	def process_file(self, filename):
 		print "Processing: " + filename
 		inputfile = codecs.open(filename, encoding='utf-8')
 		if filename.endswith('.txt'):
-			#self.__process_twitter(inputfile)
-			""""""
+			self.__process_twitter(inputfile)
 		elif filename.endswith('.dir'):
 			self.__process_followers(inputfile)
 		else:
@@ -107,8 +107,11 @@ class TwitterAnalyzer:
 			self.tweetContent.write(tweetID + '\t' + content + '\n')
 			
 			# Write out tweetID, user
-			user = tweet['interaction']['author']['username']
+			user = str(tweet['interaction']['author']['id'])
 			self.tweetUser.write(tweetID + '\t' + user + '\n')
+			
+			# Write out the userID, username (could be more than one mapping)
+			self.username.write(user + '\t' + tweet['interaction']['author']['username'] + '\n')
 			
 			# Write out the sentiment
 			if tweet.has_key('salience'):
@@ -155,7 +158,7 @@ class TwitterAnalyzer:
 			
 			# Write out retweet information
 			if tweet['twitter'].has_key('retweeted'):
-				originalAuthor = tweet['twitter']['retweeted']['user']['screen_name']
+				originalAuthor = str(tweet['twitter']['retweeted']['user']['id'])
 				self.retweet.write(tweetID + '\t' + originalAuthor + '\n')
 			
 			# Write out keywords
