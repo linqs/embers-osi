@@ -1,0 +1,3 @@
+*.log
+embers-test/messages/
+embers-test/results/
