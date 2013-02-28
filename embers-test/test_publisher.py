@@ -27,7 +27,7 @@ import os
 import codecs
 import time
 
-log = logs.getLogger('test-publisher')
+log = logs.getLogger('test_publisher')
 
 """
 test_publisher.py
@@ -53,7 +53,6 @@ def main():
 	
 	queue.init(arg)
 	writer = queue.open(arg.pub, 'pub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
-	#reader = queue.open(arg.sub, 'sub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
 	
 	try:
 		while True:

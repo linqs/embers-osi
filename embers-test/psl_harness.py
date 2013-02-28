@@ -28,7 +28,7 @@ import codecs
 import json
 import subprocess
 
-log = logs.getLogger('psl-harness')
+log = logs.getLogger('psl_harness')
 
 """
 psl_harness.py
@@ -53,8 +53,6 @@ psl_harness.py will:
 
 """
 def main():
-	# TODO Call PSL program instead of NOP
-	
 	# Initialize arguments
 	argparser = args.get_parser()
 	argparser.add_argument('--msg_folder', help='Where to write messages to')
@@ -65,10 +63,9 @@ def main():
 	message_folder = "./messages/"
 	results_folder = "./results/"
 	if arg.msg_folder:
-		message_folder = "./messages/"
+		message_folder = arg.msg_folder
 	if arg.result_folder:
-		message_folder = "./messages/"
-	
+		results_folder = arg.result_folder
 	
 	# Initialize log
 	logs.init(arg)
@@ -94,14 +91,16 @@ def main():
 		message_file.close()
 		
 		# Launch PSL, telling it the name of the file to analyze
-		log.info("Launching PSL instance for message [%s]", feedmsg['embersId'])
-		#subprocess.call(['path/to/psl', 'arguments'])
+		log.info("Launching PSL instance for message. [%s]", feedmsg['embersId'])
+		message_file = os.path.abspath(os.path.join(message_folder, feedmsg['embersId']))
+		#subprocess.call(['/path/to/java/', 'arguments'])
 		
 		# Now publish the result
 		results_file = codecs.open(os.path.join(results_folder, feedmsg['embersId']), encoding='utf-8', mode='r')
 		result = json.load(results_file)
-		#TODO add embersId to result
-		writer.write(result)
+		result = message.add_embers_ids(result)
+		log.info("Publishing result message. [new id: %s]", result['embersId'])
+		writer.write(json.dump(result))
 
 if __name__ == '__main__':
 	main()
