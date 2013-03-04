@@ -55,7 +55,7 @@ Inserter countryInsert = data.getInserter(Country, gazPart);
 Inserter admin1Insert = data.getInserter(Admin1, gazPart);
 Inserter admin2Insert = data.getInserter(Admin2, gazPart);
 
-BufferedReader reader = new BufferedReader(new FileReader(fullGazetteerPath));
+BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fullGazetteerPath), "utf-8"));
 String line;
 String delim = cb.getString("gazetteerdelim", "\t");
 int keyIndex = 0;

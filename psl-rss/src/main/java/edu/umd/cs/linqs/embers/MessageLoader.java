@@ -1,9 +1,11 @@
 package edu.umd.cs.linqs.embers;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class MessageLoader {
 	public MessageLoader(String filename) {
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(filename));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
 
 			String line = reader.readLine();
 			json = new JSONObject(line);
