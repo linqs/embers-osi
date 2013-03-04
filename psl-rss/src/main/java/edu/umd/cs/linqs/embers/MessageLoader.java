@@ -38,7 +38,7 @@ public class MessageLoader {
 			JSONArray entitiesArray = json.getJSONObject("BasisEnrichment").getJSONArray("entities");
 			
 			embersId = json.getString("embersId");
-			language = json.getString("language");
+			language = json.getJSONObject("BasisEnrichment").getString("language");
 			
 			
 			entities = new ArrayList<Entity>(entitiesArray.length());
