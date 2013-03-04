@@ -65,7 +65,7 @@ loader.insertAllEntities(db, Entity)
 loader.insertWrittenIn(db, WrittenIn)
 db.close()
 
-toClose = [Entity, WrittenIn, Alias, Country, LatLong, Cat, Admin1, Admin2] as Set
+toClose = [Entity, WrittenIn, Alias, Population, Country, LatLong, Cat, Admin1, Admin2] as Set
 
 db = data.getDatabase(write, toClose, read, gazPart)
 
