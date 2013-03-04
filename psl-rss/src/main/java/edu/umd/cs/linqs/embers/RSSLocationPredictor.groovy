@@ -64,7 +64,9 @@ loader.insertAllEntities(db, Entity)
 loader.insertWrittenIn(db, WrittenIn)
 db.close()
 
-db = data.getDatabase(write, read, gazPart)
+toClose = [Entity, WrittenIn, Alias, Country, LatLong, Cat, Admin1, Admin2] as Set
+
+db = data.getDatabase(write, toClose, read, gazPart)
 
 m.add PredicateConstraint.PartialFunctional, on: ArticleCountry
 m.add PredicateConstraint.PartialFunctional, on: PSL_Location
