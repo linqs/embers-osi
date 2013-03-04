@@ -23,7 +23,7 @@ ConfigBundle cb = cm.getBundle("rss")
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath);
 String dbName = db.getString("dbame", "psl");
-String fullDBPath = dbPath + File.separator + dbName;
+String fullDBPath = dbPath + dbName;
 /* Reinitializes the RDBMS to an empty Datastore */
 DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 
