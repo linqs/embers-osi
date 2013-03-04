@@ -1,3 +1,4 @@
 *.log
+.DS_STORE
 embers-test/messages/
 embers-test/results/
