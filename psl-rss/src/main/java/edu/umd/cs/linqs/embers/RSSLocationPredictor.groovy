@@ -53,6 +53,7 @@ m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, A
 m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 m.add predicate: "ArticleCountry", types: [ArgumentType.UniqueID, ArgumentType.String]
+m.add function: "RefersTo", implementation: new RefersTo()
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
@@ -71,8 +72,8 @@ db = data.getDatabase(write, toClose, read, gazPart)
 m.add PredicateConstraint.PartialFunctional, on: ArticleCountry
 m.add PredicateConstraint.PartialFunctional, on: PSL_Location
 
-//m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location)) >> PSL_Location(Article, LocID), weight: 1.0, squared: true
-m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
+m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & ArticleCountry(Article, C) & Country(LocID, C)) >> PSL_Location(Article, LocID), weight: 1.0, squared: true
+m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
 
 LazyMPEInference mpe = new LazyMPEInference(m, db, cb)
 FullInferenceResult result = mpe.mpeInference()
