@@ -61,9 +61,9 @@ public class ResultsEvaluator {
 			entry = new gsrEntry();
 			
 			entry.id = Integer.parseInt(tokens[idIndex]);
-			entry.country = tokens[countryIndex];
-			entry.state = tokens[stateIndex];
-			entry.city = tokens[cityIndex];
+			entry.country = NormalizeText.stripAccents(tokens[countryIndex]);
+			entry.state = NormalizeText.stripAccents(tokens[stateIndex]);
+			entry.city = NormalizeText.stripAccents(tokens[cityIndex]);
 			entry.code = Integer.parseInt(tokens[codeIndex]);
 			entry.type = tokens[typeIndex];
 			if (tokens.length > populationIndex)
@@ -81,6 +81,7 @@ public class ResultsEvaluator {
 	
 	public void printEvalution(PrintStream out) throws IOException, JSONException {
 		int totalResults = 0;
+		int totalCorrect = 0;
 		int correctCountries = 0;
 		int correctStates = 0;
 		int correctCities = 0;
@@ -111,16 +112,27 @@ public class ResultsEvaluator {
 				continue;
 			}
 
+			System.out.println("Event ID: " + entry.id);
 			System.out.println("Predicted country: " + country + ", true country: " + entry.country);
 			System.out.println("Predicted state: " + state + ", true state: " + entry.state);
 			System.out.println("Predicted city: " + city + ", true city: " + entry.city);
 			
+			boolean flag = true;
 			if (country.equals(entry.country))
 				correctCountries++;
+			else
+				flag = false;
 			if (state.equals(entry.state))
 				correctStates++;
+			else
+				flag = false;
 			if (city.equals(entry.city))
 				correctCities++;
+			else
+				flag = false;
+			
+			if (flag)
+				totalCorrect++;
 			
 			totalResults++;
 			
@@ -131,10 +143,12 @@ public class ResultsEvaluator {
 		double countryAccuracy = (double) correctCountries / totalResults;
 		double stateAccuracy = (double) correctStates / totalResults;
 		double cityAccuracy = (double) correctCities / totalResults;
+		double totalAccuracy = (double) totalCorrect / totalResults;
 		
 		out.println("Country accuracy : " + countryAccuracy + "  (" + correctCountries + " / " + totalResults + ")");
 		out.println("State accuracy : " + stateAccuracy + "  (" + correctStates + " / " + totalResults + ")");
 		out.println("City accuracy : " + cityAccuracy + "  (" + correctCities + " / " + totalResults + ")");
+		out.println("Total accuracy : " + totalAccuracy + "  (" + totalCorrect + " / " + totalResults + ")");
 	}
 	
 	public static void main(String [] args) throws ConfigurationException, IOException, JSONException {

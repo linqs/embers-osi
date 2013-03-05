@@ -1,8 +1,9 @@
 *.log
+*.db
 .classpath
 .project
 .settings/
-psl-rss/target/
 .DS_STORE
-embers-test/messages/
-embers-test/results/
+psl-rss/target/
+messages/
+results/

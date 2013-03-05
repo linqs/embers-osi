@@ -55,15 +55,13 @@ def main():
 	writer = queue.open(arg.pub, 'pub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
 	
 	try:
-		while True:
-			msg_reader = codecs.open(arg.json_file, encoding='utf-8', mode='r')
+		msg_reader = codecs.open(arg.json_file, encoding='utf-8', mode='r')
+		message = msg_reader.readline()
+		while message:
+			writer.write(message)
 			message = msg_reader.readline()
-			while message:
-				writer.write(message)
-				message = msg_reader.readline()
-			
-			msg_reader.close()
-			time.sleep(3)
+		
+		msg_reader.close()
 	except KeyboardInterrupt:
 		pass
 	

@@ -37,7 +37,7 @@ String messageName = args[0]
 
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath);
-String dbName = cb.getString("dbame", "psl");
+String dbName = cb.getString("dbname", "psl");
 String fullDBPath = dbPath + dbName;
 /* Reinitializes the RDBMS to an empty Datastore */
 DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, false), cb);
@@ -83,7 +83,7 @@ log.debug("Infeasibility norm: " + result.getInfeasibilityNorm());
 /**
  * Compute predicted country, state, and city
  */
-String predictedCountry;
+String predictedCountry = "";
 String predictedCity;
 String predictedState;
 UniqueID predictedLocation;
@@ -110,13 +110,17 @@ for (GroundAtom atom : Queries.getAllAtoms(db, PSL_Location)) {
 
 // look up city and state for location
 Variable var = new Variable("var")
-def query = new DatabaseQuery(new QueryAtom(OfficialName, Queries.convertArguments(db, OfficialName, predictedLocation, var)))
-ResultList list = db.executeQuery(query)
-predictedCity = list.get(0)[0].getValue()
-query = new DatabaseQuery(new QueryAtom(Admin1, Queries.convertArguments(db, Admin1, predictedLocation, var)))
-list = db.executeQuery(query)
-predictedState = list.get(0)[0].getValue()
-
+if (predictedLocation == null) {
+	predictedState = ""
+	predictedCity = ""
+} else {
+	def query = new DatabaseQuery(new QueryAtom(OfficialName, Queries.convertArguments(db, OfficialName, predictedLocation, var)))
+	ResultList list = db.executeQuery(query)
+	predictedCity = list.get(0)[0].getValue()
+	query = new DatabaseQuery(new QueryAtom(Admin1, Queries.convertArguments(db, Admin1, predictedLocation, var)))
+	list = db.executeQuery(query)
+	predictedState = list.get(0)[0].getValue()
+}
 db.close()
 
 log.debug("Location is {}", predictedLocation)
