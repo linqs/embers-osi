@@ -8,7 +8,9 @@ import edu.umd.cs.psl.config.ConfigBundle;
 import edu.umd.cs.psl.config.ConfigManager;
 import edu.umd.cs.psl.database.DataStore;
 import edu.umd.cs.psl.database.Database
+import edu.umd.cs.psl.database.DatabaseQuery
 import edu.umd.cs.psl.database.Partition
+import edu.umd.cs.psl.database.ResultList;
 import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
 import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
 import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
@@ -16,7 +18,10 @@ import edu.umd.cs.psl.evaluation.result.FullInferenceResult;
 import edu.umd.cs.psl.groovy.PSLModel;
 import edu.umd.cs.psl.groovy.PredicateConstraint;
 import edu.umd.cs.psl.model.argument.ArgumentType;
+import edu.umd.cs.psl.model.argument.UniqueID;
+import edu.umd.cs.psl.model.argument.Variable;
 import edu.umd.cs.psl.model.atom.GroundAtom;
+import edu.umd.cs.psl.model.atom.QueryAtom
 import edu.umd.cs.psl.util.database.Queries;
 
 /**
@@ -26,6 +31,9 @@ Logger log = LoggerFactory.getLogger(this.class)
 
 ConfigManager cm = ConfigManager.getManager()
 ConfigBundle cb = cm.getBundle("rss")
+
+String resultsDir = cb.getString("enrichedpath", null)
+String messageName = args[0]
 
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath);
@@ -41,14 +49,6 @@ data.deletePartition(write)
 /* Initializes model (just for defining gazetteer) */
 PSLModel m = new PSLModel(this, data)
 
-/* Defines Gazetteer predicates */
-//m.add predicate: "AlsoKnownAs", types: [ArgumentType.UniqueID, ArgumentType.String]
-//m.add predicate: "LatLong", types: [ArgumentType.UniqueID, ArgumentType.Double, ArgumentType.Double]
-//m.add predicate: "Cat", types: [ArgumentType.UniqueID]
-//m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
-//m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
-//m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
-
 m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, ArgumentType.String, ArgumentType.Integer]
 m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
@@ -59,7 +59,7 @@ Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
 Database db = data.getDatabase(read)
 
-MessageLoader loader = new MessageLoader("messages/2b4304a6f1621feb4a1d902a79ba4c372694e946")
+MessageLoader loader = new MessageLoader(messageName)
 
 loader.insertAllEntities(db, Entity)
 loader.insertWrittenIn(db, WrittenIn)
@@ -77,12 +77,57 @@ m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Locati
 
 LazyMPEInference mpe = new LazyMPEInference(m, db, cb)
 FullInferenceResult result = mpe.mpeInference()
-System.out.println("Total incompatibility: " + result.getTotalWeightedIncompatibility());
-System.out.println("Infeasibility norm: " + result.getInfeasibilityNorm());
+log.debug("Total incompatibility: " + result.getTotalWeightedIncompatibility());
+log.debug("Infeasibility norm: " + result.getInfeasibilityNorm());
 
-for (GroundAtom atom : Queries.getAllAtoms(db, ArticleCountry))
-	System.out.println(atom.toString() + " : " + atom.getValue());
+/**
+ * Compute predicted country, state, and city
+ */
+String predictedCountry;
+String predictedCity;
+String predictedState;
+UniqueID predictedLocation;
+double countryScore = 0.0;
+double locationScore = 0.0;
+
+
+for (GroundAtom atom : Queries.getAllAtoms(db, ArticleCountry)) {
+	log.debug(atom.toString() + " : " + atom.getValue());
+	if (atom.getValue() > countryScore) {
+		predictedCountry = atom.getArguments()[1].getValue();
+		countryScore = atom.getValue();
+	}
+}
+
+for (GroundAtom atom : Queries.getAllAtoms(db, PSL_Location)) {
+	log.debug(atom.toString() + " : " + atom.getValue());
+	if (atom.getValue() > locationScore) {
+		predictedLocation = atom.getArguments()[1];
+		locationScore = atom.getValue();
+	}
+}
+
+
+// look up city and state for location
+Variable var = new Variable("var")
+def query = new DatabaseQuery(new QueryAtom(OfficialName, Queries.convertArguments(db, OfficialName, predictedLocation, var)))
+ResultList list = db.executeQuery(query)
+predictedCity = list.get(0)[0].getValue()
+query = new DatabaseQuery(new QueryAtom(Admin1, Queries.convertArguments(db, Admin1, predictedLocation, var)))
+list = db.executeQuery(query)
+predictedState = list.get(0)[0].getValue()
 
 db.close()
+
+log.debug("Location is {}", predictedLocation)
+log.debug("Country is {}", predictedCountry)
+log.debug("City is {}", predictedCity)
+log.debug("State is {}", predictedState)
+
+
+loader.enrichGeocode(predictedCountry, predictedState, predictedCity)
+loader.writeOut(resultsDir)
+
+
 
 
