@@ -1,9 +1,17 @@
+# Logs and databases
 *.log
 *.db
+
+# Misc project files
 .classpath
 .project
-.settings/
 .DS_STORE
+.settings/
+
+# Maven files
+classpath.out
 psl-rss/target/
+
+# IO files
 messages/
 results/
