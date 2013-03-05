@@ -3,6 +3,8 @@ package edu.umd.cs.linqs.embers
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.HashMultimap;
+
 import edu.umd.cs.psl.config.ConfigBundle;
 import edu.umd.cs.psl.config.ConfigManager;
 import edu.umd.cs.psl.database.DataStore;
@@ -24,7 +26,7 @@ ConfigBundle cb = cm.getBundle("rss")
 
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath + File.separator);
-String dbName = cb.getString("dbame", "psl");
+String dbName = cb.getString("dbname", "psl");
 String fullDBPath = dbPath + dbName;
 /* Reinitializes the RDBMS to an empty Datastore */
 DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
@@ -33,6 +35,7 @@ DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, 
 PSLModel m = new PSLModel(this, data)
 
 /* Defines Gazetteer predicates */
+m.add predicate: "OfficialName", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Alias", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Location_Type", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Population", types: [ArgumentType.UniqueID, ArgumentType.Integer]
@@ -47,6 +50,7 @@ String gazetteerName = cb.getString("gazetteername", "");
 String fullGazetteerPath = auxDataPath + gazetteerName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
+Inserter officialInsert = data.getInserter(OfficialName, gazPart);
 Inserter aliasInsert = data.getInserter(Alias, gazPart);
 Inserter typeInsert = data.getInserter(Location_Type, gazPart);
 Inserter popInsert = data.getInserter(Population, gazPart);
@@ -59,6 +63,7 @@ BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputSt
 String line;
 String delim = cb.getString("gazetteerdelim", "\t");
 int keyIndex = 0;
+int officialIndex = 1;
 int aliasIndex = 1;
 int optAliasIndexA = 2;
 int optAliasIndexB = 3;
@@ -70,13 +75,16 @@ int countryIndex = 8;
 int admin1Index = 9;
 int admin2Index = 10;
 
+
 while (line = reader.readLine()) {
+	line = NormalizeText.stripAccents(line);
 	String[] tokens = line.split(delim);
-	aliasInsert.insert(tokens[keyIndex], tokens[aliasIndex]);
+	officialInsert.insert(tokens[keyIndex], tokens[officialIndex]);
+	try { aliasInsert.insert(tokens[keyIndex], tokens[aliasIndex]); } catch (java.lang.AssertionError e) {}
 	if (!tokens[optAliasIndexA].equals(""))
-		aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexA]);
+		try { aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexA]); } catch (java.lang.AssertionError e) {}
 	if (!tokens[optAliasIndexB].equals(""))
-		aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexB]);
+		try { aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexB]); } catch (java.lang.AssertionError e) {}
 	typeInsert.insert(tokens[keyIndex], tokens[typeIndex]);
 	popInsert.insert(tokens[keyIndex], tokens[popIndex]);
 	latLongInsert.insert(tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
