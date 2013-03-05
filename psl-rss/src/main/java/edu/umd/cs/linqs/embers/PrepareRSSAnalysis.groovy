@@ -3,11 +3,10 @@ package edu.umd.cs.linqs.embers
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.HashMultimap;
-
 import edu.umd.cs.psl.config.ConfigBundle;
 import edu.umd.cs.psl.config.ConfigManager;
 import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.database.Database;
 import edu.umd.cs.psl.database.Partition;
 import edu.umd.cs.psl.database.loading.Inserter;
 import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
@@ -15,6 +14,12 @@ import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
 import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
 import edu.umd.cs.psl.groovy.PSLModel;
 import edu.umd.cs.psl.model.argument.ArgumentType;
+import edu.umd.cs.psl.model.argument.GroundTerm;
+import edu.umd.cs.psl.model.argument.Term;
+import edu.umd.cs.psl.model.atom.GroundAtom;
+import edu.umd.cs.psl.model.atom.RandomVariableAtom;
+import edu.umd.cs.psl.model.predicate.Predicate;
+import edu.umd.cs.psl.util.database.Queries;
 
 /**
  * Runs periodically to setup gazetteer and other data for psl-rss prediction scripts.
@@ -26,7 +31,7 @@ ConfigBundle cb = cm.getBundle("rss")
 
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath + File.separator);
-String dbName = cb.getString("dbname", "psl");
+String dbName = cb.getString("dbame", "psl");
 String fullDBPath = dbPath + dbName;
 /* Reinitializes the RDBMS to an empty Datastore */
 DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
@@ -50,20 +55,15 @@ String gazetteerName = cb.getString("gazetteername", "");
 String fullGazetteerPath = auxDataPath + gazetteerName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
-Inserter officialInsert = data.getInserter(OfficialName, gazPart);
-Inserter aliasInsert = data.getInserter(Alias, gazPart);
-Inserter typeInsert = data.getInserter(Location_Type, gazPart);
-Inserter popInsert = data.getInserter(Population, gazPart);
-Inserter latLongInsert = data.getInserter(LatLong, gazPart);
-Inserter countryInsert = data.getInserter(Country, gazPart);
-Inserter admin1Insert = data.getInserter(Admin1, gazPart);
-Inserter admin2Insert = data.getInserter(Admin2, gazPart);
+
+Database db = data.getDatabase(gazPart);
 
 BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fullGazetteerPath), "utf-8"));
 String line;
 String delim = cb.getString("gazetteerdelim", "\t");
 int keyIndex = 0;
-int officialIndex = 1;
+/* Uses first name as both official name and an alias */
+int officialNameIndex = 1;
 int aliasIndex = 1;
 int optAliasIndexA = 2;
 int optAliasIndexB = 3;
@@ -75,22 +75,31 @@ int countryIndex = 8;
 int admin1Index = 9;
 int admin2Index = 10;
 
-
 while (line = reader.readLine()) {
 	line = NormalizeText.stripAccents(line);
 	String[] tokens = line.split(delim);
-	officialInsert.insert(tokens[keyIndex], tokens[officialIndex]);
-	try { aliasInsert.insert(tokens[keyIndex], tokens[aliasIndex]); } catch (java.lang.AssertionError e) {}
+	insertRawArguments(db, OfficialName, tokens[keyIndex], tokens[officialNameIndex]);
+	insertRawArguments(db, Alias, tokens[keyIndex], tokens[aliasIndex]);
 	if (!tokens[optAliasIndexA].equals(""))
-		try { aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexA]); } catch (java.lang.AssertionError e) {}
+		insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexA]);
 	if (!tokens[optAliasIndexB].equals(""))
-		try { aliasInsert.insert(tokens[keyIndex], tokens[optAliasIndexB]); } catch (java.lang.AssertionError e) {}
-	typeInsert.insert(tokens[keyIndex], tokens[typeIndex]);
-	popInsert.insert(tokens[keyIndex], tokens[popIndex]);
-	latLongInsert.insert(tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
-	countryInsert.insert(tokens[keyIndex], tokens[countryIndex]);
+		insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexB]);
+	insertRawArguments(db, Location_Type, tokens[keyIndex], tokens[typeIndex]);
+	insertRawArguments(db, Population, tokens[keyIndex], tokens[popIndex]);
+	insertRawArguments(db, LatLong, tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
+	insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
 	if (tokens.length > admin1Index && !tokens[admin1Index].equals(""))
-		admin1Insert.insert(tokens[keyIndex], tokens[admin1Index]);
+		insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
 	if (tokens.length > admin2Index && !tokens[admin2Index].equals(""))
-		admin2Insert.insert(tokens[keyIndex], tokens[admin2Index]);
+		insertRawArguments(db, Admin2, tokens[keyIndex], tokens[admin2Index]);
+}
+
+db.close();
+
+private void insertRawArguments(Database db, Predicate p, Object... rawArgs) {
+	GroundTerm[] args = Queries.convertArguments(db, p, rawArgs);
+	GroundAtom atom = db.getAtom(p, args);
+	atom.setValue(1.0);
+	if (atom instanceof RandomVariableAtom)
+		atom.commitToDB();
 }

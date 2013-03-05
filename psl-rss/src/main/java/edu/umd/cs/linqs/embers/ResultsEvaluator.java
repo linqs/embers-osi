@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,9 +53,6 @@ public class ResultsEvaluator {
 		
 		while ((line = reader.readLine()) != null) {
 			String[] tokens = line.split(",");
-			
-//			System.out.println(line);
-//			System.out.println(Arrays.toString(tokens));
 			
 			entry = new gsrEntry();
 			
