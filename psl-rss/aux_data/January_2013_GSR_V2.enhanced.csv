@@ -395,8 +395,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 418,Costa Rica,,,0411,Economy / Stock Index / Increase,CRSMBCT
 419,Costa Rica,,,0411,Economy / Stock Index / Increase,CRSMBCT
 420,Brazil,São Paulo,São Paulo,0151,Civil Unrest / Other Government / Non-Violent,General Population
-421,Chile,"Valparaíso
-",NA,0152,Civil Unrest / Other Government / Violent,General Population
+421,Chile,"Valparaíso",NA,0152,Civil Unrest / Other Government / Violent,General Population
 422,Uruguay,Montevideo,Montevideo,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 423,Costa Rica,,,0411,Economy / Stock Index / Increase,CRSMBCT
 424,Costa Rica,,,0411,Economy / Stock Index / Increase,CRSMBCT
@@ -436,8 +435,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 459,Paraguay,,,033,Illness / Common,18
 460,Peru,,,033,Illness / Common,12
 462,Chile,Valparaiso,NA,0151,Civil Unrest / Other Government / Non-Violent,Education
-464,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+464,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 465,Venezuela,Anzoategui ,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 466,Peru,,,0411,Economy / Stock Index / Increase,IGBVL
 467,Argentina,,,0422,Economy / Currency Exchange / Decrease,ARS
@@ -462,8 +460,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 486,Paraguay,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 487,Costa Rica,,,0412,Economy / Stock Index / Decrease,CRSMBCT
 488,Argentina,,,0411,Economy / Stock Index / Increase,Merval
-490,Chile,"Metropolitana
-",Santiago,0151,Civil Unrest / Other Government / Non-Violent,Education
+490,Chile,"Metropolitana",Santiago,0151,Civil Unrest / Other Government / Non-Violent,Education
 491,Chile,Santiago Metropolitan,Santiago,0152,Civil Unrest / Other Government / Violent,Education
 492,Peru,Huancavelica,NA,0152,Civil Unrest / Other Government / Violent,Education
 493,Argentina,,,033,Illness / Common,1325
@@ -518,8 +515,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 542,Peru,,,033,Illness / Common,4
 543,Venezuela,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Medical
 544,Peru,Puno,NA,0131,Civil Unrest / Energy & Resources / Non-Violent,General Population
-545,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+545,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 546,Venezuela,Zulia,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Medical
 547,Peru,Ayacucho, Ayacucho,0152,Civil Unrest / Other Government / Violent,Education
 548,Brazil,Ceara,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
@@ -559,8 +555,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 583,Venezuela,,,0411,Economy / Stock Index / Increase,IBVC
 584,Panamá,,,0412,Economy / Stock Index / Decrease,BVPSBVPS
 585,Peru,NA,NA,0131,Civil Unrest / Energy & Resources / Non-Violent,General Population
-586,Chile,"Santiago Metropolitan
-",Santiago,0151,Civil Unrest / Other Government / Non-Violent,Education
+586,Chile,"Santiago Metropolitan",Santiago,0151,Civil Unrest / Other Government / Non-Violent,Education
 587,Argentina,,,033,Illness / Common,1179
 588,Bolivia,,,033,Illness / Common,3
 589,Chile ,,,033,Illness / Common,492
@@ -623,8 +618,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 646,Paraguay,,,033,Illness / Common,6
 647,Peru,,,033,Illness / Common,10
 648,Peru,Piura,Piura,0151,Civil Unrest / Other Government / Non-Violent,Labor
-649,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+649,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 650,Argentina,,,0412,Economy / Stock Index / Decrease,Merval
 651,Brazil,,,0412,Economy / Stock Index / Decrease,IBOV
 652,Chile,,,0412,Economy / Stock Index / Decrease,CHILE65
@@ -659,8 +653,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 681,Panamá,,,033,Illness / Common,28
 682,Paraguay,,,033,Illness / Common,6
 683,Peru,,,033,Illness / Common,21
-684,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+684,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 685,Panamá,,,0411,Economy / Stock Index / Increase,BVPSBVPS
 686,Mexico,,,0421,Economy / Currency Exchange / Increase,MXN
 687,Venezuela,Zulia,Maracaibo,0151,Civil Unrest / Other Government / Non-Violent,Labor
@@ -697,8 +690,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 718,Paraguay,,,033,Illness / Common,1
 719,Peru,,,033,Illness / Common,11
 720,Chile,NA,NA,0112,Civil Unrest / Employment & Wages / Violent,Labor
-721,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,General Population
+721,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,General Population
 722,Mexico,Guerrero,Acapulco de Juarez,0151,Civil Unrest / Other Government / Non-Violent,Education
 723,Brazil,São Paulo,São Paulo,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 724,Argentina,,,033,Illness / Common,448
@@ -717,8 +709,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 737,Paraguay,,,033,Illness / Common,2
 738,Peru,,,033,Illness / Common,6
 739,Uruguay,Colonia,Conchillas,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
-740,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+740,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 741,Venezuela,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Medical
 742,Venezuela,Lara,Quibor,0141,Civil Unrest / Other Economic / Non-Violent,Agricultural
 743,Argentina,,,033,Illness / Common,394
@@ -737,8 +728,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 756,Paraguay,,,033,Illness / Common,3
 757,Peru,,,033,Illness / Common,38
 758,Brazil,NA,NA,0151,Civil Unrest / Other Government / Non-Violent,General Population
-761,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,General Population
+761,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,General Population
 762,Peru,Ucayali ,NA,0151,Civil Unrest / Other Government / Non-Violent,Agricultural
 763,Argentina,,,033,Illness / Common,363
 764,Bolivia,,,033,Illness / Common,64
@@ -775,8 +765,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 796,Mexico,Guerrero,Acapulco de Juarez,0151,Civil Unrest / Other Government / Non-Violent,Education
 798,Brazil,,,0421,Economy / Currency Exchange / Increase,BRL
 799,Peru,,,0421,Economy / Currency Exchange / Increase,PEN
-800,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+800,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 801,Mexico,,,0412,Economy / Stock Index / Decrease,MEXBOL
 802,Chile,,,0421,Economy / Currency Exchange / Increase,CLP
 805,Mexico,,,0422,Economy / Currency Exchange / Decrease,MXN
@@ -822,8 +811,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 848,Paraguay,NA,NA,0221,Vote / Referendum / Yes,Amendment to Article 120 of the CP
 849,Uruguay,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 850,Venezuela,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Legal
-851,Chile,"Santiago Metropolitan
-",Santiago,0132,Civil Unrest / Energy & Resources / Violent,Ethnic
+851,Chile,"Santiago Metropolitan",Santiago,0132,Civil Unrest / Energy & Resources / Violent,Ethnic
 852,Argentina,,,033,Illness / Common,118
 853,Bolivia,,,033,Illness / Common,124
 854,Chile ,,,033,Illness / Common,83
@@ -842,8 +830,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 871,Venezuela,NA,NA,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 872,Peru,NA,NA,0131,Civil Unrest / Energy & Resources / Non-Violent,General Population
 873,Venezuela,,,0411,Economy / Stock Index / Increase,IBVC
-874,Chile,"Santiago Metropolitan
-",Santiago,0152,Civil Unrest / Other Government / Violent,Education
+874,Chile,"Santiago Metropolitan",Santiago,0152,Civil Unrest / Other Government / Violent,Education
 875,Argentina,,,033,Illness / Common,126
 876,Bolivia,,,033,Illness / Common,78
 877,Chile ,,,033,Illness / Common,77
@@ -1759,8 +1746,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 1829,Chile,Valparaíso ,Reñaca,0161,Civil Unrest / Other / Non-Violent,Education
 1830,Chile,Metropolitana,Santiago,0161,Civil Unrest / Other / Non-Violent,General Population
 1831,Chile,Metropolitana,Santiago,0162,Civil Unrest / Other / Violent,General Population
-1832,Chile,"Tarapacá
-",NA,0151,Civil Unrest / Other Government / Non-Violent,Labor
+1832,Chile,"Tarapacá",NA,0151,Civil Unrest / Other Government / Non-Violent,Labor
 1833,Chile,NA,NA,0152,Civil Unrest / Other Government / Violent,Education
 1834,Chile,Metropolitana,Santiago,0141,Civil Unrest / Other Economic / Non-Violent,General Population
 1835,Chile,Metropolitana,Santiago,0161,Civil Unrest / Other / Non-Violent,General Population
@@ -1938,9 +1924,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 2011,Peru,Cajamarca,Bambamarca,0131,Civil Unrest / Energy & Resources / Non-Violent,General population
 2012,Nicaragua,Managua,Managua,0161,Civil Unrest / Other / Non-Violent,General Population
 2013,Mexico,NA,Mexico City,0151,Civil Unrest / Other Government / Non-Violent,General Population
-2015,Venezuela,"Delta Amacuro
-
-",Tucupita,0151,Civil Unrest / Other Government / Non-Violent,General Population
+2015,Venezuela,"Delta Amacuro",Tucupita,0151,Civil Unrest / Other Government / Non-Violent,General Population
 2016,Peru,Huánuco,Huánuco,0131,Civil Unrest / Energy & Resources / Non-Violent,Education
 2017,Colombia,Cauca,NA,0162,Civil Unrest / Other / Violent,Ethnic
 2018,Venezuela,Anzoategui,La PeN/A,0131,Civil Unrest / Energy & Resources / Non-Violent,Ethnic
@@ -3312,7 +3296,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 3473,Brazil,Pernambuco,Recife,0162,Civil Unrest / Other / Violent,Education
 3474,Chile,,,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 3475,Chile,,,0152,Civil Unrest / Other Government / Violent,Education
-3476,Chile,Bío Bío,"Concepción//Lota, Coronel",0141,Civil Unrest / Other Economic / Non-Violent,Labor
+3476,Chile,Bío Bío,"Concepción//Lota Coronel",0141,Civil Unrest / Other Economic / Non-Violent,Labor
 3478,Chile,,,0162,Civil Unrest / Other / Violent,General Population
 3479,Chile,Metropolitana,Santiago,0111,Civil Unrest / Employment & Wages / Non-Violent,Medical
 3480,Chile,Metropolitana,Santiago,0161,Civil Unrest / Other / Non-Violent,General Population
@@ -3784,9 +3768,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 3947,Argentina,Santa Fé,Rosario,0122,Civil Unrest / Housing / Violent,General Population
 3948,Argentina,,Buenos Aires,0161,Civil Unrest / Other / Non-Violent,General Population
 3949,Argentina,Río Negro,Bariloche,0162,Civil Unrest / Other / Violent,General Population
-3950,Argentina,Córdoba,"Córdoba
-
-",0162,Civil Unrest / Other / Violent,General Population
+3950,Argentina,Córdoba,"Córdoba",0162,Civil Unrest / Other / Violent,General Population
 3951,Argentina,Chubut,Comodoro Rivadavia,0162,Civil Unrest / Other / Violent,General Population
 3952,Argentina,Misiones,Posadas,0162,Civil Unrest / Other / Violent,General Population
 3953,Argentina,Río Negro,Viedma,0132,Civil Unrest / Energy & Resources / Violent,General Population
@@ -3942,7 +3924,7 @@ Event ID,COUNTRY,STATE,CITY,EVENT CODE,Event Type,POPULATION
 4104,Mexico,Oaxaca,Oaxaca de Juárez,0141,Civil Unrest / Other Economic / Non-Violent,Education
 4105,Mexico,Ciudad de México,Ciudad de México,0162,Civil Unrest / Other / Violent,General Population
 4106,Mexico,Chiapas,Tuxtla Gutiérrez,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
-4107,Mexico,"Tlaxcala,",Tlaxcala de Xicohténcatl,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
+4107,Mexico,Tlaxcala,Tlaxcala de Xicohténcatl,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 4108,Mexico,Tlaxcala,Tlaxcala de Xicohténcatl,0111,Civil Unrest / Employment & Wages / Non-Violent,Labor
 4109,Mexico,Ciudad de México,Ciudad de México,0151,Civil Unrest / Other Government / Non-Violent,General Population
 4110,Mexico,Veracruz,Minatitlán ,0151,Civil Unrest / Other Government / Non-Violent,Labor

@@ -3,6 +3,8 @@ package edu.umd.cs.linqs.embers.json;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.umd.cs.linqs.embers.NormalizeText;
+
 public class Entity {
 
 	public String getExpr() {
@@ -25,7 +27,7 @@ public class Entity {
 	}
 
 	public Entity(JSONObject entity) throws JSONException {
-		expr = entity.getString("expr");
+		expr = NormalizeText.stripAccents(entity.getString("expr"));
 		neType = entity.getString("neType");
 		
 		String offsetStr = entity.getString("offset");

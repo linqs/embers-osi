@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,9 @@ public class ResultsEvaluator {
 		while ((line = reader.readLine()) != null) {
 			String[] tokens = line.split(",");
 			
+//			System.out.println(line);
+//			System.out.println(Arrays.toString(tokens));
+			
 			entry = new gsrEntry();
 			
 			entry.id = Integer.parseInt(tokens[idIndex]);
@@ -62,7 +66,10 @@ public class ResultsEvaluator {
 			entry.city = tokens[cityIndex];
 			entry.code = Integer.parseInt(tokens[codeIndex]);
 			entry.type = tokens[typeIndex];
-			entry.population = tokens[populationIndex];
+			if (tokens.length > populationIndex)
+				entry.population = tokens[populationIndex];
+			else
+				entry.population = "";
 			
 			gsrMap.put(entry.id, entry);
 		}
@@ -93,7 +100,7 @@ public class ResultsEvaluator {
 			JSONObject pslEnrichment = json.getJSONObject("pslEnrichment");
 			JSONObject pslGeocode = pslEnrichment.getJSONObject("pslGeocode");
 			
-			int eventID = json.getInt("eventID"); 
+			int eventID = json.getInt("eventId"); 
 			String country = pslGeocode.getString("country");
 			String state = pslGeocode.getString("state");
 			String city = pslGeocode.getString("city");
@@ -103,6 +110,10 @@ public class ResultsEvaluator {
 				System.out.println("WARN: No GSR entry for event ID: " + eventID + ". Skipping.");
 				continue;
 			}
+
+			System.out.println("Predicted country: " + country + ", true country: " + entry.country);
+			System.out.println("Predicted state: " + state + ", true state: " + entry.state);
+			System.out.println("Predicted city: " + city + ", true city: " + entry.city);
 			
 			if (country.equals(entry.country))
 				correctCountries++;

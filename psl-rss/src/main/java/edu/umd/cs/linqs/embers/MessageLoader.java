@@ -1,11 +1,16 @@
 package edu.umd.cs.linqs.embers;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +100,24 @@ public class MessageLoader {
 		RandomVariableAtom atom = (RandomVariableAtom) db.getAtom(writtenIn, arguments);
 		atom.setValue(1.0);
 		db.commit(atom);
+	}
+	
+	public void enrichGeocode(String country, String state, String city) throws JSONException {
+		JSONObject psl = new JSONObject();
+		JSONObject geocode = new JSONObject();
+		geocode.put("country", country);
+		geocode.put("state", state);
+		geocode.put("city", city);
+		psl.put("pslGeocode", geocode);
+		json.put("pslEnrichment", psl);
+	}
+	
+	public void writeOut(String outDir) throws JSONException, IOException {
+		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(
+				new File(outDir, embersId)), "utf-8");
+		json.write(writer);
+		writer.flush();
+		writer.close();
 	}
 	
 	
