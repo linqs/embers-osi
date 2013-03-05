@@ -21,7 +21,13 @@ import edu.umd.cs.psl.model.argument.StringAttribute;
 import edu.umd.cs.psl.model.atom.RandomVariableAtom;
 import edu.umd.cs.psl.model.predicate.Predicate;
 
-
+/**
+ * Utility object for loading EMBERS JSON feed into PSL
+ * Currently loads entities extracted by BASIS named entity extraction
+ * 
+ * @author Bert Huang <bert@cs.umd.edu>
+ *
+ */
 public class MessageLoader {
 
 	private JSONObject json;
@@ -58,6 +64,12 @@ public class MessageLoader {
 		}
 	}
 	
+	/**
+	 * Inserts entities extracted by BASIS named entity extraction into PSL 
+	 * database
+	 * @param db
+	 * @param entity
+	 */
 	public void insertAllEntities(Database db, Predicate entity) {
 		for (Entity e : entities) {
 			GroundTerm [] arguments = new GroundTerm[4];
@@ -71,6 +83,11 @@ public class MessageLoader {
 		}
 	}
 	
+	/**
+	 * Inserts language of article into database
+	 * @param db
+	 * @param writtenIn
+	 */
 	public void insertWrittenIn(Database db, Predicate writtenIn) {
 		GroundTerm [] arguments = new GroundTerm[2];
 		arguments[0] = db.getUniqueID(embersId);
@@ -79,6 +96,7 @@ public class MessageLoader {
 		atom.setValue(1.0);
 		db.commit(atom);
 	}
+	
 	
 	public static void main(String [] args) {
 
