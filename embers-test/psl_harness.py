@@ -117,6 +117,10 @@ def main():
 		log.info("Publishing result message. [new id: %s]", result['embersId'])
 		writer.write(json.dumps(result))
 
+		# Delete message and result files
+		os.remove(message_file)
+		os.remove(results_file)
+
 if __name__ == '__main__':
 	main()
 
