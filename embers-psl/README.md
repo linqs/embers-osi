@@ -8,6 +8,10 @@ To run through the simulated feed of the GSR-labeled rss articles, use the follo
 
 python test_publisher.py --pub tcp://127.0.0.1:1234 --json_file ../psl-rss/aux_data/januaryGSRGeoCode.json 
 
-From psl-rss/
+From psl-rss/, run 
+
+java -cp ./target/classes:`cat classpath.out` edu.umd.cs.linqs.embers.ResultsEvaluator
+
+to evaluate geolocation accuracy against the GSR.
 
 On production runs of psl_harness.py, omit --keep_files to save disk space. 
