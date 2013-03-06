@@ -44,6 +44,8 @@ Arguments (optional):
 --tunnel		the host to tunnel to
 --msg_folder	where to write feed/queue messages to when running PSL
 --result_folder	where PSL will write the results for a message
+--keep_files	Boolean value for whether to keep the message files sent from python to Java
+--psl_init		PSL class to run to set up shared database
 
 psl_harness.py will:
 - Continuously read from a queue
@@ -62,8 +64,7 @@ def main():
 	argparser.add_argument('--project', help='Where the PSL model is located', required=True)
 	argparser.add_argument('--model', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.RSSLocationPredictor)', required=True)
 	argparser.add_argument('--psl_init', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.PrepareRSSAnalysis)', default = 'edu.umd.cs.linqs.embers.PrepareRSSAnalysis')
-	argparser.add_argument('--queue_conf', help='Config file for etool queue')
-	argparser.add_argument('--keep_files', help='Keep message and result files', default=False)
+	argparser.add_argument('--keep_files', help='Keep message and result files', action='store_true')
 	arg = argparser.parse_args()
 	
 	# The output folder for PSL messages and results.
@@ -130,7 +131,7 @@ def main():
 		writer.write(json.dumps(result))
 
 		# Delete message and result files
-		if !arg.keep_files:
+		if not arg.keep_files:
 			os.remove(os.path.join(message_folder, feedmsg['embersId']))
 			os.remove(os.path.join(results_folder, feedmsg['embersId']))
 
