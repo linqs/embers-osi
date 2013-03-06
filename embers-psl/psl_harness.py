@@ -61,6 +61,9 @@ def main():
 	argparser.add_argument('--result_folder', help='Where PSL results will reside')
 	argparser.add_argument('--project', help='Where the PSL model is located', required=True)
 	argparser.add_argument('--model', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.RSSLocationPredictor)', required=True)
+	argparser.add_argument('--psl_init', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.PrepareRSSAnalysis)', default = 'edu.umd.cs.linqs.embers.PrepareRSSAnalysis')
+	argparser.add_argument('--queue_conf', help='Config file for etool queue')
+	argparser.add_argument('--keep_files', help='Keep message and result files', default=False)
 	arg = argparser.parse_args()
 	
 	# The output folder for PSL messages and results.
@@ -70,6 +73,11 @@ def main():
 		message_folder = arg.msg_folder
 	if arg.result_folder:
 		results_folder = arg.result_folder
+
+	if not os.path.exists(message_folder):
+	    os.makedirs(message_folder)
+	if not os.path.exists(results_folder):
+	    os.makedirs(results_folder)
 	
 	# Initialize log
 	logs.init(arg)
@@ -95,6 +103,10 @@ def main():
 	log.info("Publishing to queue %s", arg.pub)
 	writer = queue.open(arg.pub, 'pub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
 	
+	# populate gazetteer
+
+	subprocess.call(["java", "-Dfile.encoding=UTF-8", "-classpath", classpath, arg.psl_init])
+
 	# Now launch PSL
 	for feedmsg in reader:
 		# Clean the message to fix irregularities
@@ -118,8 +130,9 @@ def main():
 		writer.write(json.dumps(result))
 
 		# Delete message and result files
-		os.remove(message_file)
-		os.remove(results_file)
+		if !arg.keep_files:
+			os.remove(os.path.join(message_folder, feedmsg['embersId']))
+			os.remove(os.path.join(results_folder, feedmsg['embersId']))
 
 if __name__ == '__main__':
 	main()

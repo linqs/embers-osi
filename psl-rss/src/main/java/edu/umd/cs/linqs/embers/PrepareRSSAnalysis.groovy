@@ -31,7 +31,7 @@ ConfigBundle cb = cm.getBundle("rss")
 
 String defaultPath = System.getProperty("java.io.tmpdir");
 String dbPath = cb.getString("dbpath", defaultPath + File.separator);
-String dbName = cb.getString("dbame", "psl");
+String dbName = cb.getString("dbname", "psl");
 String fullDBPath = dbPath + dbName;
 /* Reinitializes the RDBMS to an empty Datastore */
 DataStore data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
@@ -95,6 +95,8 @@ while (line = reader.readLine()) {
 }
 
 db.close();
+
+log.info("Inserted gazetteer into PSL database")
 
 private void insertRawArguments(Database db, Predicate p, Object... rawArgs) {
 	GroundTerm[] args = Queries.convertArguments(db, p, rawArgs);
