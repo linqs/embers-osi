@@ -55,7 +55,6 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 		m.add predicate: "ArticleCountry", types: [ArgumentType.UniqueID, ArgumentType.String]
-		m.add function: "RefersTo", implementation: new RefersTo()
 	}
 
 

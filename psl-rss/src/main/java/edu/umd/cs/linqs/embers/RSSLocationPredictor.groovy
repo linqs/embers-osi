@@ -1,28 +1,28 @@
 package edu.umd.cs.linqs.embers
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import edu.umd.cs.psl.application.inference.LazyMPEInference
-import edu.umd.cs.psl.config.ConfigBundle;
-import edu.umd.cs.psl.config.ConfigManager;
-import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.config.ConfigBundle
+import edu.umd.cs.psl.config.ConfigManager
+import edu.umd.cs.psl.database.DataStore
 import edu.umd.cs.psl.database.Database
 import edu.umd.cs.psl.database.DatabaseQuery
 import edu.umd.cs.psl.database.Partition
-import edu.umd.cs.psl.database.ResultList;
-import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
-import edu.umd.cs.psl.evaluation.result.FullInferenceResult;
-import edu.umd.cs.psl.groovy.PSLModel;
-import edu.umd.cs.psl.groovy.PredicateConstraint;
-import edu.umd.cs.psl.model.argument.ArgumentType;
-import edu.umd.cs.psl.model.argument.UniqueID;
-import edu.umd.cs.psl.model.argument.Variable;
-import edu.umd.cs.psl.model.atom.GroundAtom;
+import edu.umd.cs.psl.database.ResultList
+import edu.umd.cs.psl.database.rdbms.RDBMSDataStore
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type
+import edu.umd.cs.psl.evaluation.result.FullInferenceResult
+import edu.umd.cs.psl.groovy.PSLModel
+import edu.umd.cs.psl.groovy.PredicateConstraint
+import edu.umd.cs.psl.model.argument.ArgumentType
+import edu.umd.cs.psl.model.argument.UniqueID
+import edu.umd.cs.psl.model.argument.Variable
+import edu.umd.cs.psl.model.atom.GroundAtom
 import edu.umd.cs.psl.model.atom.QueryAtom
-import edu.umd.cs.psl.util.database.Queries;
+import edu.umd.cs.psl.util.database.Queries
 
 /**
  * Runs periodically to setup gazetteer and other data for prediction scripts.
@@ -53,7 +53,6 @@ m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, A
 m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 m.add predicate: "ArticleCountry", types: [ArgumentType.UniqueID, ArgumentType.String]
-m.add function: "RefersTo", implementation: new RefersTo()
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
