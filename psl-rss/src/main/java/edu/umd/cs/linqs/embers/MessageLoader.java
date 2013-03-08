@@ -65,6 +65,28 @@ public class MessageLoader {
 			e.printStackTrace();
 		}
 	}
+
+	public MessageLoader(JSONObject json) {
+		try {
+			JSONArray entitiesArray = json.getJSONObject("BasisEnrichment").getJSONArray("entities");
+			
+			embersId = json.getString("embersId");
+			language = json.getJSONObject("BasisEnrichment").getString("language");
+			
+			
+			entities = new ArrayList<Entity>(entitiesArray.length());
+			
+			for (int i = 0 ; i < entitiesArray.length(); i++) {
+				entities.add(i, new Entity(entitiesArray.getJSONObject(i)));
+			}
+			
+			this.json = json;
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	/**
 	 * Inserts entities extracted by BASIS named entity extraction into PSL 
@@ -115,6 +137,10 @@ public class MessageLoader {
 		json.write(writer);
 		writer.flush();
 		writer.close();
+	}
+	
+	public JSONObject getJSONObject() {
+		return json;
 	}
 	
 	
