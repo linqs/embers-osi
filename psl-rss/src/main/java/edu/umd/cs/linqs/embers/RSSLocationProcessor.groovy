@@ -70,7 +70,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		loader.insertWrittenIn(db, WrittenIn)
 		db.close()
 
-		def toClose = [Entity, WrittenIn, Alias, Population, Country, LatLong, Cat, Admin1, Admin2] as Set
+		def toClose = [Entity, WrittenIn, Alias, Population, Country, LatLong, Cat, Admin1, Admin2, RefersTo] as Set
 
 		db = data.getDatabase(write, toClose, read, gazPart)
 
