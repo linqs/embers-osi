@@ -26,15 +26,22 @@ import edu.umd.cs.psl.model.atom.QueryAtom
 import edu.umd.cs.psl.util.database.Queries;
 
 class RSSLocationProcessor implements JSONProcessor {
-	Logger log = LoggerFactory.getLogger(this.class)
-	ConfigManager cm = ConfigManager.getManager()
-	ConfigBundle cb = cm.getBundle("rss")
+	
+	private final String CONFIG_PREFIX = "rsslocationprocessor"
+	
+	/* Key for result output directory */
+	private final String OUTPUT_DIR_KEY = CONFIG_PREFIX + ".outputdir"
+	
+	private final Logger log = LoggerFactory.getLogger(this.class)
+	private final ConfigManager cm = ConfigManager.getManager()
+	private final ConfigBundle cb = cm.getBundle("rss")
 
 
-	String defaultPath = System.getProperty("java.io.tmpdir");
-	String dbPath = cb.getString("dbpath", defaultPath);
-	String dbName = cb.getString("dbname", "psl");
-	String fullDBPath = dbPath + dbName;
+	private final String defaultPath = System.getProperty("java.io.tmpdir");
+	private final String dbPath = cb.getString("dbpath", defaultPath);
+	private String dbName = cb.getString("dbname", "psl");
+	private String fullDBPath = dbPath + dbName;
+	private final String outputDirectory = cb.getString(OUTPUT_DIR_KEY, null);
 
 	private DataStore data
 	private Partition read
@@ -50,11 +57,22 @@ class RSSLocationProcessor implements JSONProcessor {
 		write = new Partition(1)
 		gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 		m = new PSLModel(this, data)
+		
+		
 
 		m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, ArgumentType.String, ArgumentType.Integer]
 		m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 		m.add predicate: "ArticleCountry", types: [ArgumentType.UniqueID, ArgumentType.String]
+		
+		m.add PredicateConstraint.PartialFunctional, on: ArticleCountry
+		m.add PredicateConstraint.PartialFunctional, on: PSL_Location
+
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & ArticleCountry(Article, C) & Country(LocID, C)) >> PSL_Location(Article, LocID), weight: 1.0, squared: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Country(LocID, Location) & RefersTo(Location, LocID)) >> PSL_Location(Article, LocID), weight: 0.5, squared: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Admin1(LocID, Location) & RefersTo(Location, LocID)) >> PSL_Location(Article, LocID), weight: 0.5, squared: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Admin2(LocID, Location) & RefersTo(Location, LocID)) >> PSL_Location(Article, LocID), weight: 0.5, squared: true
 	}
 
 
@@ -74,14 +92,9 @@ class RSSLocationProcessor implements JSONProcessor {
 
 		db = data.getDatabase(write, toClose, read, gazPart)
 
-		m.add PredicateConstraint.PartialFunctional, on: ArticleCountry
-		m.add PredicateConstraint.PartialFunctional, on: PSL_Location
-
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & ArticleCountry(Article, C) & Country(LocID, C)) >> PSL_Location(Article, LocID), weight: 1.0, squared: true
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & RefersTo(Location, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
-
 		LazyMPEInference mpe = new LazyMPEInference(m, db, cb)
 		FullInferenceResult result = mpe.mpeInference()
+		mpe.close()
 		log.debug("Total incompatibility: " + result.getTotalWeightedIncompatibility());
 		log.debug("Infeasibility norm: " + result.getInfeasibilityNorm());
 
@@ -133,11 +146,12 @@ class RSSLocationProcessor implements JSONProcessor {
 		log.debug("City is {}", predictedCity)
 		log.debug("State is {}", predictedState)
 
-
+		
 		loader.enrichGeocode(predictedCountry, predictedState, predictedCity)
+		
+		if (outputDirectory != null)
+			loader.writeOut(outputDirectory);
 
 		return loader.getJSONObject();
-
 	}
-
 }

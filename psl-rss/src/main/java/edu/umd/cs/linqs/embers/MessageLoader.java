@@ -44,19 +44,19 @@ public class MessageLoader {
 
 			String line = reader.readLine();
 			json = new JSONObject(line);
-			
+
 			JSONArray entitiesArray = json.getJSONObject("BasisEnrichment").getJSONArray("entities");
-			
+
 			embersId = json.getString("embersId");
 			language = json.getJSONObject("BasisEnrichment").getString("language");
-			
-			
+
+
 			entities = new ArrayList<Entity>(entitiesArray.length());
-			
+
 			for (int i = 0 ; i < entitiesArray.length(); i++) {
 				entities.add(i, new Entity(entitiesArray.getJSONObject(i)));
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -69,25 +69,25 @@ public class MessageLoader {
 	public MessageLoader(JSONObject json) {
 		try {
 			JSONArray entitiesArray = json.getJSONObject("BasisEnrichment").getJSONArray("entities");
-			
+
 			embersId = json.getString("embersId");
 			language = json.getJSONObject("BasisEnrichment").getString("language");
-			
-			
+
+
 			entities = new ArrayList<Entity>(entitiesArray.length());
-			
+
 			for (int i = 0 ; i < entitiesArray.length(); i++) {
 				entities.add(i, new Entity(entitiesArray.getJSONObject(i)));
 			}
-			
+
 			this.json = json;
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
+
 	/**
 	 * Inserts entities extracted by BASIS named entity extraction into PSL 
 	 * database
@@ -106,7 +106,32 @@ public class MessageLoader {
 			db.commit(atom);
 		}
 	}
-	
+
+	/**
+	 * Inserts entities extracted by BASIS named entity extraction into PSL 
+	 * database
+	 * @param db
+	 * @param entity
+	 */
+	public void insertAllTokens(Database db, Predicate entity) {
+		for (Entity e : entities) {
+			String [] tokens = e.getExpr().split("\\s+");
+			if (tokens.length > 1)
+				for (String token : tokens) {
+					GroundTerm [] arguments = new GroundTerm[4];
+					arguments[0] = db.getUniqueID(embersId);
+					arguments[1] = new StringAttribute(token);
+					arguments[2] = new StringAttribute(e.getNeType());
+					arguments[3] = new IntegerAttribute(e.getOffset());
+					RandomVariableAtom atom = (RandomVariableAtom) db.getAtom(entity, arguments);
+					atom.setValue(1.0);
+					db.commit(atom);
+				}
+		}
+	}
+
+
+
 	/**
 	 * Inserts language of article into database
 	 * @param db
@@ -120,7 +145,7 @@ public class MessageLoader {
 		atom.setValue(1.0);
 		db.commit(atom);
 	}
-	
+
 	public void enrichGeocode(String country, String state, String city) throws JSONException {
 		JSONObject psl = new JSONObject();
 		JSONObject geocode = new JSONObject();
@@ -130,7 +155,7 @@ public class MessageLoader {
 		psl.put("pslGeocode", geocode);
 		json.put("pslEnrichment", psl);
 	}
-	
+
 	public void writeOut(String outDir) throws JSONException, IOException {
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(
 				new File(outDir, embersId)), "utf-8");
@@ -138,12 +163,12 @@ public class MessageLoader {
 		writer.flush();
 		writer.close();
 	}
-	
+
 	public JSONObject getJSONObject() {
 		return json;
 	}
-	
-	
+
+
 	public static void main(String [] args) {
 		@SuppressWarnings("unused")
 		MessageLoader ml = new MessageLoader("messages/b72bd8382210aff316127f05ebbac3dae78c96c3");
