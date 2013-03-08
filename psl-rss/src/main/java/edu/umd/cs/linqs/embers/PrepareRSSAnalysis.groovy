@@ -1,25 +1,24 @@
 package edu.umd.cs.linqs.embers
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-import edu.umd.cs.psl.config.ConfigBundle;
-import edu.umd.cs.psl.config.ConfigManager;
-import edu.umd.cs.psl.database.DataStore;
-import edu.umd.cs.psl.database.Database;
-import edu.umd.cs.psl.database.Partition;
-import edu.umd.cs.psl.database.loading.Inserter;
-import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
-import edu.umd.cs.psl.groovy.PSLModel;
-import edu.umd.cs.psl.model.argument.ArgumentType;
-import edu.umd.cs.psl.model.argument.GroundTerm;
-import edu.umd.cs.psl.model.argument.Term;
-import edu.umd.cs.psl.model.atom.GroundAtom;
-import edu.umd.cs.psl.model.atom.RandomVariableAtom;
-import edu.umd.cs.psl.model.predicate.Predicate;
-import edu.umd.cs.psl.util.database.Queries;
+import edu.umd.cs.psl.config.ConfigBundle
+import edu.umd.cs.psl.config.ConfigManager
+import edu.umd.cs.psl.database.DataStore
+import edu.umd.cs.psl.database.Database
+import edu.umd.cs.psl.database.Partition
+import edu.umd.cs.psl.database.rdbms.RDBMSDataStore
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type
+import edu.umd.cs.psl.groovy.PSLModel
+import edu.umd.cs.psl.model.argument.ArgumentType
+import edu.umd.cs.psl.model.argument.GroundTerm
+import edu.umd.cs.psl.model.atom.GroundAtom
+import edu.umd.cs.psl.model.atom.RandomVariableAtom
+import edu.umd.cs.psl.model.predicate.Predicate
+import edu.umd.cs.psl.ui.loading.InserterUtils
+import edu.umd.cs.psl.util.database.Queries
 
 /**
  * Runs periodically to setup gazetteer and other data for psl-rss prediction scripts.
@@ -48,11 +47,14 @@ m.add predicate: "LatLong", types: [ArgumentType.UniqueID, ArgumentType.Integer,
 m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
+m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID];
 
 /* Parses gazetteer */
 String auxDataPath = cb.getString("auxdatapath", "");
 String gazetteerName = cb.getString("gazetteername", "");
 String fullGazetteerPath = auxDataPath + gazetteerName;
+String refersToFileName = cb.getString("referstoname", "");
+String fullRefersToFilePath = auxDataPath + refersToFileName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
@@ -95,6 +97,9 @@ while (line = reader.readLine()) {
 }
 
 db.close();
+
+/* Loads normalized population info */
+InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
 
 log.info("Inserted gazetteer into PSL database")
 

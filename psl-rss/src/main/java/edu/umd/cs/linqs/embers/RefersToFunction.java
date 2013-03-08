@@ -18,7 +18,7 @@ import edu.umd.cs.psl.model.predicate.PredicateFactory;
  * 
  * @author Stephen Bach <bach@cs.umd.edu>
  */
-public class RefersTo implements ExternalFunction {
+public class RefersToFunction implements ExternalFunction {
 
 	@Override
 	public double getValue(ReadOnlyDatabase db, GroundTerm... args) {
