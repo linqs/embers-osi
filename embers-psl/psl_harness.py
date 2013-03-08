@@ -27,6 +27,8 @@ import os
 import codecs
 import json
 import subprocess
+import socket
+from time import sleep
 
 log = logs.getLogger('psl_harness')
 
@@ -59,41 +61,14 @@ psl_harness.py will:
 def main():
 	# Initialize arguments
 	argparser = args.get_parser()
-	argparser.add_argument('--msg_folder', help='Where to write messages to')
-	argparser.add_argument('--result_folder', help='Where PSL results will reside')
-	argparser.add_argument('--project', help='Where the PSL model is located', required=True)
-	argparser.add_argument('--model', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.RSSLocationPredictor)', required=True)
-	argparser.add_argument('--psl_init', help='The PSL model to run (ex. edu.umd.cs.linqs.embers.PrepareRSSAnalysis)', default = 'edu.umd.cs.linqs.embers.PrepareRSSAnalysis')
-	argparser.add_argument('--keep_files', help='Keep message and result files', action='store_true')
+	argparser.add_argument('--local_port', help='Local port to connect to java server', required=True)
 	arg = argparser.parse_args()
-	
-	# The output folder for PSL messages and results.
-	message_folder = "./messages/"
-	results_folder = "./results/"
-	if arg.msg_folder:
-		message_folder = arg.msg_folder
-	if arg.result_folder:
-		results_folder = arg.result_folder
+		
+	localPort = int(arg.local_port)
 
-	if not os.path.exists(message_folder):
-	    os.makedirs(message_folder)
-	if not os.path.exists(results_folder):
-	    os.makedirs(results_folder)
-	
 	# Initialize log
 	logs.init(arg)
 	global log
-	
-	# Generate a classpath for the PSL program
-	project_folder = arg.project
-	os.chdir(project_folder)
-	subprocess.call(['mvn', 'compile'])
-	subprocess.call(['mvn', 'dependency:build-classpath', '-Dmdep.outputFile=classpath.out'])
-	
-	# Read in classpath to string
-	classpath = open(os.path.join(project_folder, 'classpath.out'), 'r').readline()
-	classpath += ":" + os.path.join(project_folder, 'target/classes/')
-	log.info("Generated classpath for project %s. Classpath: %s", arg.model, classpath)
 	
 	# Initialize the queue with arguments and connect to the specified feed
 	log.info("Opening and connecting to queue %s", arg.sub)
@@ -104,37 +79,40 @@ def main():
 	log.info("Publishing to queue %s", arg.pub)
 	writer = queue.open(arg.pub, 'pub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
 	
-	# populate gazetteer
 
-	subprocess.call(["java", "-Dfile.encoding=UTF-8", "-classpath", classpath, arg.psl_init])
+	count = 0
+	# Connect to Java server
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	while True:
+		try:
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			sock.connect(("localhost", localPort))
+			break
+		except:
+			log.info("Unable to connect to local server")
+			sleep(3)
+
+	log.debug("Connected to java server on port %d" % localPort)
+
+	socketLines = sock.makefile()
 
 	# Now launch PSL
 	for feedmsg in reader:
 		# Clean the message to fix irregularities
 		feedmsg = message.clean(json.loads(feedmsg))
-		
-		# Write out message to messages folder
-		message_file = codecs.open(os.path.join(message_folder, feedmsg['embersId']), encoding='utf-8', mode='w')
-		message_file.write(json.dumps(feedmsg))
-		message_file.close()
-		
-		# Launch PSL, telling it the name of the file to analyze
-		log.info("Launching PSL instance for message. [%s]", feedmsg['embersId'])
-		message_file = os.path.abspath(os.path.join(message_folder, feedmsg['embersId']))
-		subprocess.call(["java", "-Dfile.encoding=UTF-8", "-classpath", classpath, arg.model, message_file])
-		
-		# Now publish the result
-		results_file = codecs.open(os.path.join(results_folder, feedmsg['embersId']), encoding='utf-8', mode='r')
-		result = json.load(results_file)
-		result = message.add_embers_ids(result)
-		log.info("Publishing result message. [new id: %s]", result['embersId'])
-		writer.write(json.dumps(result))
 
-		# Delete message and result files
-		if not arg.keep_files:
-			os.remove(os.path.join(message_folder, feedmsg['embersId']))
-			os.remove(os.path.join(results_folder, feedmsg['embersId']))
+		log.debug("Read message %d. Sending to java" % count)
+		# Write message to socket stream
+		sock.sendall(json.dumps(feedmsg))
+		sock.sendall('\n')
+
+		# Receive result from socket stream
+		result = socketLines.readline()
+		writer.write(json.dumps(result))
+		count += 1
+
+	sock.close()
+
 
 if __name__ == '__main__':
 	main()
-
