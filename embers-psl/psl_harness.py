@@ -36,25 +36,18 @@ log = logs.getLogger('psl_harness')
 psl_harness.py
 
 Arguments (required):
---sub		the feed to subscribe to
---pub		the feed to publish to
---model		the PSL model to run
---project	where the Eclipse/Maven project for the model is
+--sub			the feed to subscribe to
+--pub			the feed to publish to
+--local_port	local port to forward and receive messages 
 
 Arguments (optional):
 --ssh_key		the private key to use to tunnel to EMBERS
 --tunnel		the host to tunnel to
---msg_folder	where to write feed/queue messages to when running PSL
---result_folder	where PSL will write the results for a message
---keep_files	Boolean value for whether to keep the message files sent from python to Java
---psl_init		PSL class to run to set up shared database
 
 psl_harness.py will:
 - Continuously read from a queue
-- Write the message it receives to a folder (titled by the embersId)
-- Call PSL (not implemented) with the argument of the message file
-- Wait for PSL to complete
-- Read the result file (titled by the embersId) from the result folder
+- Forward any messages from read queue to a socket on local_port
+- Read response from local_port
 - Publish that result to a queue
 
 """

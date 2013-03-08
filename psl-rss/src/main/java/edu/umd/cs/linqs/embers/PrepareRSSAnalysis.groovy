@@ -90,10 +90,12 @@ while (line = reader.readLine()) {
 	insertRawArguments(db, Population, tokens[keyIndex], tokens[popIndex]);
 	insertRawArguments(db, LatLong, tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
 	insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
-	if (tokens.length > admin1Index && !tokens[admin1Index].equals(""))
+	if (tokens.length > admin1Index && !tokens[admin1Index].equals("")) {
 		insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
-	if (tokens.length > admin2Index && !tokens[admin2Index].equals(""))
+	}
+	if (tokens.length > admin2Index && !tokens[admin2Index].equals("")) {
 		insertRawArguments(db, Admin2, tokens[keyIndex], tokens[admin2Index]);
+	}
 }
 
 db.close();
