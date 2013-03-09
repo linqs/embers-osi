@@ -91,8 +91,10 @@ def main():
 
 	# Now launch PSL
 	for feedmsg in reader:
+		log.debug("Read message:")
+		log.debug(feedmsg)
 		# Clean the message to fix irregularities
-		feedmsg = message.clean(json.loads(feedmsg))
+		feedmsg = message.clean(feedmsg)
 
 		log.debug("Read message %d. Sending to java" % count)
 		# Write message to socket stream
