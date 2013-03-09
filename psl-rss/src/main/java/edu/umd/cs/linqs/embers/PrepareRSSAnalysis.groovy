@@ -47,7 +47,7 @@ m.add predicate: "LatLong", types: [ArgumentType.UniqueID, ArgumentType.Integer,
 m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
-m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID];
+m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
 
 /* Parses gazetteer */
 String auxDataPath = cb.getString("auxdatapath", "");
@@ -57,6 +57,9 @@ String refersToFileName = cb.getString("referstoname", "");
 String fullRefersToFilePath = auxDataPath + refersToFileName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
+
+/* Loads normalized population info */
+InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
 
 Database db = data.getDatabase(gazPart);
 
@@ -100,8 +103,6 @@ while (line = reader.readLine()) {
 
 db.close();
 
-/* Loads normalized population info */
-InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
 
 log.info("Inserted gazetteer into PSL database")
 
