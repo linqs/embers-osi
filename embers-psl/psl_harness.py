@@ -94,7 +94,7 @@ def main():
 			# Now launch PSL
 			for feedmsg in reader:
 				# Clean the message to fix irregularities
-				feedmsg = message.clean(json.loads(feedmsg))
+				feedmsg = message.clean(feedmsg)
 
 				log.debug("Read message %d. Sending to java" % count)
 				# Write message to socket stream
@@ -107,7 +107,8 @@ def main():
 				count += 1
 
 		except:
-			log.info("Server was disconnected. Trying to reconnect")
+			log.info("Server was disconnected. Trying to reconnect in 3 seconds")
+			sleep(3)
 
 
 	sock.close()

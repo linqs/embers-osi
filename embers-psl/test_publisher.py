@@ -26,6 +26,7 @@ from etool import args, logs, queue
 import os
 import codecs
 import time
+import json
 
 log = logs.getLogger('test_publisher')
 
@@ -58,7 +59,7 @@ def main():
 		msg_reader = codecs.open(arg.json_file, encoding='utf-8', mode='r')
 		message = msg_reader.readline()
 		while message:
-			writer.write(message)
+			writer.write(json.loads(message))
 			message = msg_reader.readline()
 		
 		msg_reader.close()
