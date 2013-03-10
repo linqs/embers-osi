@@ -121,21 +121,21 @@ public class ResultsEvaluator {
 				continue;
 			}
 
-			System.out.println("Event ID: " + entry.id);
+			System.out.println("\n\nEvent ID: " + entry.id);
 			System.out.println("EMBERS country: " + embersCountry + ", PSL country: " + country + ", true country: " + entry.country);
 			System.out.println("EMBERS state: " + embersState + ", PSL state: " + state + ", true state: " + entry.state);
 			System.out.println("EMBERS city: " + embersCity+ ", PSL city: " + city + ", true city: " + entry.city);
 
 			boolean allCorrect = true;
-			if (country.equals(entry.country))
+			if (country.toLowerCase().equals(entry.country.toLowerCase()))
 				correctCountries++;
 			else
 				allCorrect = false;
-			if (state.equals(entry.state))
+			if (state.toLowerCase().equals(entry.state.toLowerCase()))
 				correctStates++;
 			else
 				allCorrect = false;
-			if (city.equals(entry.city))
+			if (city.toLowerCase().equals(entry.city.toLowerCase()))
 				correctCities++;
 			else
 				allCorrect = false;
@@ -146,15 +146,15 @@ public class ResultsEvaluator {
 
 
 			allCorrect = true;
-			if (embersCountry.equals(entry.country))
+			if (embersCountry.toLowerCase().equals(entry.country.toLowerCase()))
 				embersCountries++;
 			else
 				allCorrect = false;
-			if (embersState.equals(entry.state))
+			if (embersState.toLowerCase().equals(entry.state.toLowerCase()))
 				embersStates++;
 			else
 				allCorrect = false;
-			if (embersCity.equals(entry.city))
+			if (embersCity.toLowerCase().equals(entry.city.toLowerCase()))
 				embersCities++;
 			else
 				allCorrect = false;
