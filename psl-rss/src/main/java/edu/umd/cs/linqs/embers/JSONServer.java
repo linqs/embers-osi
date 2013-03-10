@@ -89,6 +89,8 @@ public class JSONServer {
 				while (socket.isConnected()) {
 					try {
 						String line = in.readLine();
+						if (line == null)
+							break;
 						log.trace(line);
 						JSONObject input = new JSONObject(line);
 						JSONObject json = processor.process(input);

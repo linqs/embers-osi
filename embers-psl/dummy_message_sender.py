@@ -3,7 +3,7 @@
 #
 #  psl_harness.py
 #  
-#  Copyright 2013 Eric Norris <enorris@cs.umd.edu>
+#  Copyright 2013 Bert Huang
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -22,15 +22,12 @@
 #  
 #  
 
-from etool import args, logs, queue, message
 import os
 import codecs
 import json
 import subprocess
 import socket
 from time import sleep
-
-log = logs.getLogger('psl_harness')
 
 """
 psl_harness.py
@@ -53,26 +50,8 @@ psl_harness.py will:
 """
 def main():
 	# Initialize arguments
-	argparser = args.get_parser()
-	argparser.add_argument('--local_port', help='Local port to connect to java server', required=True)
-	arg = argparser.parse_args()
-		
-	localPort = int(arg.local_port)
 
-	# Initialize log
-	logs.init(arg)
-	global log
-	
-	# Initialize the queue with arguments and connect to the specified feed
-	log.info("Opening and connecting to queue %s", arg.sub)
-	queue.init(arg)
-	reader = queue.open(arg.sub, 'sub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
-	
-	# Initialize the writer to publish to a queue
-	log.info("Publishing to queue %s", arg.pub)
-	writer = queue.open(arg.pub, 'pub', ssh_key=arg.ssh_key, ssh_conn=arg.tunnel)
-	
-
+	localPort = 9999	
 	count = 0
 	# Connect to Java server
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -83,32 +62,21 @@ def main():
 				sock.connect(("localhost", localPort))
 				break
 			except:
-				log.info("Unable to connect to local server")
+				print "unable to connect. Retrying in 3 seconds"
 				sleep(3)
-
-			log.debug("Connected to java server on port %d" % localPort)
 
 		try:
 			socketLines = sock.makefile()
-
-			# Now launch PSL
-			for feedmsg in reader:
-				# Clean the message to fix irregularities
-				feedmsg = message.clean(json.loads(feedmsg))
-
-				log.debug("Read message %d. Sending to java" % count)
+			while True:
 				# Write message to socket stream
-				sock.sendall(json.dumps(feedmsg))
+				sock.sendall('{"BasisEnrichment":{"entities":[{"neType":"LOCATION","expr":"Caracas","offset":"0:1"}],"language":"English"}, "embersId":"12345"}')
 				sock.sendall('\n')
 
 				# Receive result from socket stream
 				result = socketLines.readline()
-				writer.write(json.dumps(result))
-				count += 1
 
 		except:
-			log.info("Server was disconnected. Trying to reconnect")
-
+			print "error"
 
 	sock.close()
 

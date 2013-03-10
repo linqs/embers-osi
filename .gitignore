@@ -5,7 +5,7 @@
 # Misc project files
 .classpath
 .project
-.DS_STORE
+.DS_Store
 .settings/
 
 # Maven files

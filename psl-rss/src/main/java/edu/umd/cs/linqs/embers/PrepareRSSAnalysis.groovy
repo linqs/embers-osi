@@ -19,6 +19,7 @@ import edu.umd.cs.psl.model.atom.RandomVariableAtom
 import edu.umd.cs.psl.model.predicate.Predicate
 import edu.umd.cs.psl.ui.loading.InserterUtils
 import edu.umd.cs.psl.util.database.Queries
+import java.util.HashSet
 
 /**
  * Runs periodically to setup gazetteer and other data for psl-rss prediction scripts.
@@ -48,18 +49,25 @@ m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
+m.add predicate: "Neighbor", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+m.add predicate: "IsCountry", types: [ArgumentType.String]
+m.add predicate: "IsState", types: [ArgumentType.String]
 
 /* Parses gazetteer */
 String auxDataPath = cb.getString("auxdatapath", "");
 String gazetteerName = cb.getString("gazetteername", "");
 String fullGazetteerPath = auxDataPath + gazetteerName;
 String refersToFileName = cb.getString("referstoname", "");
+String neighborFileName = cb.getString("neighborname", "");
 String fullRefersToFilePath = auxDataPath + refersToFileName;
+String fullNeighborFilePath = auxDataPath + neighborFileName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
 /* Loads normalized population info */
 InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
+/* Loads neighborhood info */
+InserterUtils.loadDelimitedData(data.getInserter(Neighbor, gazPart), fullNeighborFilePath);
 
 Database db = data.getDatabase(gazPart);
 
@@ -80,8 +88,11 @@ int countryIndex = 8;
 int admin1Index = 9;
 int admin2Index = 10;
 
+HashSet<String> countries = new HashSet<String>();
+HashSet<String> states = new HashSet<String>();
+
 while (line = reader.readLine()) {
-	line = NormalizeText.stripAccents(line);
+	line = NormalizeText.stripAccents(line).toLowerCase();
 	String[] tokens = line.split(delim);
 	insertRawArguments(db, OfficialName, tokens[keyIndex], tokens[officialNameIndex]);
 	insertRawArguments(db, Alias, tokens[keyIndex], tokens[aliasIndex]);
@@ -95,11 +106,20 @@ while (line = reader.readLine()) {
 	insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
 	if (tokens.length > admin1Index && !tokens[admin1Index].equals("")) {
 		insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
+		states.add(tokens[admin1Index])	
 	}
 	if (tokens.length > admin2Index && !tokens[admin2Index].equals("")) {
 		insertRawArguments(db, Admin2, tokens[keyIndex], tokens[admin2Index]);
+		//states.add(tokens[admin2Index])
 	}
+
+	countries.add(tokens[countryIndex])
 }
+
+for (String country : countries)
+	insertRawArguments(db, IsCountry, country)
+for (String state : states)
+	insertRawArguments(db, IsState, state)
 
 db.close();
 

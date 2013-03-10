@@ -98,7 +98,7 @@ public class MessageLoader {
 		for (Entity e : entities) {
 			GroundTerm [] arguments = new GroundTerm[4];
 			arguments[0] = db.getUniqueID(embersId);
-			arguments[1] = new StringAttribute(e.getExpr());
+			arguments[1] = new StringAttribute(e.getExpr().toLowerCase());
 			arguments[2] = new StringAttribute(e.getNeType());
 			arguments[3] = new IntegerAttribute(e.getOffset());
 			RandomVariableAtom atom = (RandomVariableAtom) db.getAtom(entity, arguments);
@@ -115,22 +115,34 @@ public class MessageLoader {
 	 */
 	public void insertAllTokens(Database db, Predicate entity) {
 		for (Entity e : entities) {
-			String [] tokens = e.getExpr().split("\\s+");
-			if (tokens.length > 1)
-				for (String token : tokens) {
+			String [] tokens = e.getExpr().toLowerCase().split("\\s+");
+			for (int i = 0; i < tokens.length; i++) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(tokens[i]);
+				for (int j = i+1; j < tokens.length; j++) {
+					//System.out.println("Adding " + sb.toString());
+					sb.append(" " + tokens[j]);
 					GroundTerm [] arguments = new GroundTerm[4];
 					arguments[0] = db.getUniqueID(embersId);
-					arguments[1] = new StringAttribute(token);
+					arguments[1] = new StringAttribute(sb.toString());
 					arguments[2] = new StringAttribute(e.getNeType());
 					arguments[3] = new IntegerAttribute(e.getOffset());
 					RandomVariableAtom atom = (RandomVariableAtom) db.getAtom(entity, arguments);
 					atom.setValue(1.0);
 					db.commit(atom);
 				}
+			}
 		}
 	}
 
+	public String [] getEntityNames() {
+		String [] vec = new String[entities.size()];
 
+		for (int i = 0; i < entities.size(); i++) {
+			vec[i] = entities.get(i).getExpr();
+		}
+		return vec;
+	}
 
 	/**
 	 * Inserts language of article into database
