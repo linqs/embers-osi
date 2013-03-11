@@ -102,15 +102,14 @@ public class ResultsEvaluator {
 			String line = reader.readLine();
 
 			JSONObject json = new JSONObject(line);
-			JSONObject pslEnrichment = json.getJSONObject("pslEnrichment");
-			JSONObject pslGeocode = pslEnrichment.getJSONObject("pslGeocode");
+			JSONObject pslGeocode = json.getJSONObject("embersGeoCode");
 
 			int eventID = json.getInt("eventId"); 
 			String country = pslGeocode.getString("country");
-			String state = pslGeocode.getString("state");
+			String state = pslGeocode.getString("admin1");
 			String city = pslGeocode.getString("city");
 
-			JSONObject embersGeocode = json.getJSONObject("embersGeoCode");
+			JSONObject embersGeocode = json.getJSONObject("embersGeoCode").getJSONObject("old");
 			String embersCountry = embersGeocode.getString("country");
 			String embersState = embersGeocode.getString("admin1");
 			String embersCity= embersGeocode.getString("city");
