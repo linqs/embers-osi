@@ -169,6 +169,12 @@ public class MessageLoader {
 		
 		
 		JSONObject embersGeoCode = new JSONObject();
+
+		if (json.has("embersGeoCode")) {
+			JSONObject oldEmbersGeoCode = json.getJSONObject("embersGeoCode");
+			embersGeoCode.put("old", oldEmbersGeoCode);
+		}
+		
 		embersGeoCode.put("country", country);
 		embersGeoCode.put("admin1", state);
 		embersGeoCode.put("city", city);

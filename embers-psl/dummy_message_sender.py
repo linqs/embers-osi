@@ -70,16 +70,14 @@ def main():
 
 		try:
 			socketLines = sock.makefile()
-			while True:
-				# Write message to socket stream
-				sock.sendall(message)
-				sock.sendall('\n')
+			# Write message to socket stream
+			sock.sendall(message)
+			sock.sendall('\n')
 
-				# Receive result from socket stream
-				result = socketLines.readline()
-
-		except:
-			print "error"
+			# Receive result from socket stream
+			result = socketLines.readline()
+		except KeyboardInterrupt:
+			sys.exit(1)
 
 	sock.close()
 

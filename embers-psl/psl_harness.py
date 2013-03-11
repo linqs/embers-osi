@@ -75,24 +75,21 @@ def main():
 
 	count = 0
 	# Connect to Java server
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	while True:
-		while True:
+		for feedmsg in reader:
 			try:
-				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				sock.connect(("localhost", localPort))
-				break
-			except:
-				log.info("Unable to connect to local server")
-				sleep(3)
+				while True:
+					try:
+						sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+						sock.connect(("localhost", localPort))
+						break
+					except:
+						log.info("Unable to connect to local server")
 
-			log.debug("Connected to java server on port %d" % localPort)
+				log.debug("Connected to java server on port %d" % localPort)
 
-		try:
-			socketLines = sock.makefile()
+				socketLines = sock.makefile()
 
-			# Now launch PSL
-			for feedmsg in reader:
 				# Clean the message to fix irregularities
 				feedmsg = message.clean(feedmsg)
 
@@ -106,12 +103,12 @@ def main():
 				writer.write(json.dumps(result))
 				count += 1
 
-		except:
-			log.info("Server was disconnected. Trying to reconnect in 3 seconds")
-			sleep(3)
+				sock.close()
+			except KeyboardInterrupt:
+				sys.exit(1)
+			else:
+				log.info("Server was disconnected.")
 
-
-	sock.close()
 
 
 
