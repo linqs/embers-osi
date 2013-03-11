@@ -36,9 +36,6 @@ public class JSONServer {
 	public static final String CONFIG_PREFIX = "jsonserver";
 
 
-	private static final int MAX_COUNT = 10;
-
-
 	/* Config key for port */
 	public final String PORT_KEY = CONFIG_PREFIX + ".port";
 	public final int PORT_DEFAULT = 9999;
@@ -91,23 +88,8 @@ public class JSONServer {
 
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 				OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
-				//				while (socket.isConnected()) {
-				try {
-					//						// sleep to reduce busy-waiting load
-					//						int interval = 1;
-					//						int waitCount = 0;
-					//						while (!in.ready() && count < MAX_COUNT) {
-					//							log.debug("Client is not ready. Waiting {} ms", interval);
-					//							Thread.sleep(interval);
-					//							if (interval < 3000)
-					//								interval *= 2;
-					//							waitCount++;
-					//						}
-					//						if (waitCount >= MAX_COUNT) {
-					//							socket.close();
-					//							break;
-					//						}
 
+				try {
 					String line = in.readLine();
 					if (line == null)
 						break;
@@ -122,11 +104,7 @@ public class JSONServer {
 					log.debug("Processed {} messages", count);
 				} catch (JSONException e) {
 					log.warn("Unable to read JSON object from line");
-					e.printStackTrace();
-					//				} catch (InterruptedException e) {
-					//					log.warn("Sleep was interrupted\n" + e.toString());
 				}
-				//				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -134,7 +112,6 @@ public class JSONServer {
 	}
 
 	public static void main(String [] args) throws ConfigurationException {
-		//		JSONServer server = new JSONServer(9999, new DummyProcessor());
 		ConfigManager cm = ConfigManager.getManager();
 		ConfigBundle cb = cm.getBundle("rss");
 		JSONServer server = new JSONServer(cb);
