@@ -159,13 +159,20 @@ public class MessageLoader {
 	}
 
 	public void enrichGeocode(String country, String state, String city) throws JSONException {
-		JSONObject psl = new JSONObject();
-		JSONObject geocode = new JSONObject();
-		geocode.put("country", country);
-		geocode.put("state", state);
-		geocode.put("city", city);
-		psl.put("pslGeocode", geocode);
-		json.put("pslEnrichment", psl);
+//		JSONObject psl = new JSONObject();
+//		JSONObject geocode = new JSONObject();
+//		geocode.put("country", country);
+//		geocode.put("state", state);
+//		geocode.put("city", city);
+//		psl.put("pslGeocode", geocode);
+//		json.put("pslEnrichment", psl);
+		
+		
+		JSONObject embersGeoCode = new JSONObject();
+		embersGeoCode.put("country", country);
+		embersGeoCode.put("admin1", state);
+		embersGeoCode.put("city", city);
+		json.put("embersGeoCode", embersGeoCode);
 	}
 
 	public void writeOut(String outDir) throws JSONException, IOException {

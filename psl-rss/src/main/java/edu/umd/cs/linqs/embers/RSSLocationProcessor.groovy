@@ -26,12 +26,12 @@ import edu.umd.cs.psl.model.atom.QueryAtom
 import edu.umd.cs.psl.util.database.Queries;
 
 class RSSLocationProcessor implements JSONProcessor {
-	
+
 	private final String CONFIG_PREFIX = "rsslocationprocessor"
-	
+
 	/* Key for result output directory */
 	private final String OUTPUT_DIR_KEY = CONFIG_PREFIX + ".outputdir"
-	
+
 	private final Logger log = LoggerFactory.getLogger(this.class)
 	private final ConfigManager cm = ConfigManager.getManager()
 	private final ConfigBundle cb = cm.getBundle("rss")
@@ -50,22 +50,25 @@ class RSSLocationProcessor implements JSONProcessor {
 
 	private PSLModel m
 
+	private final int readPartNum = 0;
+	private final int writePartNum = 1;
+
 	public RSSLocationProcessor() {
 		/* Reinitializes the RDBMS to an empty Datastore */
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, false), cb);
-		read = new Partition(0)
-		write = new Partition(1)
+		read = new Partition(readPartNum)
+		write = new Partition(writePartNum)
 		gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 		m = new PSLModel(this, data)
-		
-		
+
+
 
 		m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, ArgumentType.String, ArgumentType.Integer]
 		m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "PSL_Location", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 		m.add predicate: "ArticleCountry", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "ArticleState", types: [ArgumentType.UniqueID, ArgumentType.String]
-		
+
 		m.add PredicateConstraint.PartialFunctional, on: ArticleCountry
 		m.add PredicateConstraint.PartialFunctional, on: ArticleState
 		m.add PredicateConstraint.PartialFunctional, on: PSL_Location
@@ -78,7 +81,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add rule: (Entity(Article, Location, "ORGANIZATION", Offset) & IsState(Location)) >> ArticleState(Article, Location), weight: 0.5, squared: true
 		m.add rule: (Entity(Article, Location, "PERSON", Offset) & IsState(Location)) >> ArticleState(Article, Location), weight: 0.5, squared: true
 
-		
+
 		//m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID) & Neighbor(LocID, N)) >> PSL_Location(Article, N), weight: 0.3, squared: true
 		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID)) >> PSL_Location(Article, LocID), weight: 1.0, squared: true
 		m.add rule: (Entity(Article, C, "LOCATION", Offset) & IsCountry(C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
@@ -178,9 +181,9 @@ class RSSLocationProcessor implements JSONProcessor {
 		if (predictedLocation == null) {
 			log.debug("No location predicted. Entities were: {}", Arrays.asList(loader.getEntityNames()))
 		}
-		
+
 		loader.enrichGeocode(predictedCountry, predictedState, predictedCity)
-		
+
 		if (outputDirectory != null)
 			loader.writeOut(outputDirectory);
 
