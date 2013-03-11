@@ -15,19 +15,19 @@ Currently, the installation process is:
 
 2. Set up config files:
 	
-* ``psl/psl-rss/src/main/resources/log4j.properties`` sets up PSL's logging.
+  * ``psl/psl-rss/src/main/resources/log4j.properties`` sets up PSL's logging.
 
-* ``psl/psl-rss/src/main/resources/psl.properties`` contains various settings for PSL. Most important are:
+  * ``psl/psl-rss/src/main/resources/psl.properties`` contains various settings for PSL. Most important are:
 
-	* ``rss.dbpath`` file system path where H2 database file will be stored
+    * ``rss.dbpath`` file system path where H2 database file will be stored
 
-	* ``rss.auxdatapath`` file system path where gazatteer, and precomputed predicates are stored (currently psl/psl-rss/aux_data)
+    * ``rss.auxdatapath`` file system path where gazatteer, and precomputed predicates are stored (currently psl/psl-rss/aux_data)
 
-	* ``rss.jsonserver.port`` local port to send messages from python to java
+    * ``rss.jsonserver.port`` local port to send messages from python to java
 
-	* ``rss.jsonserver.processor`` name of PSL program to run on messages (currently RSSLocationProcessor)
+    * ``rss.jsonserver.processor`` name of PSL program to run on messages (currently RSSLocationProcessor)
 
-	* ``rss.rsslocationprocessor.outputdir`` directory to dump json text files of PSL-predicted locations. Useful for offline evaluation, but it's best to comment this out for production so no files will be output.
+    * ``rss.rsslocationprocessor.outputdir`` directory to dump json text files of PSL-predicted locations. Useful for offline evaluation, but it's best to comment this out for production so no files will be output.
 
 
 Instructions for PSL Geocoding
