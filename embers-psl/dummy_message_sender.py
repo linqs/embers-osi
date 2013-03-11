@@ -28,6 +28,7 @@ import json
 import subprocess
 import socket
 from time import sleep
+import linecache
 
 """
 psl_harness.py
@@ -55,6 +56,8 @@ def main():
 	count = 0
 	# Connect to Java server
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	message = linecache.getline('../psl-rss/aux_data/januaryGSRGeoCode.json', 1).rstrip()
+	# message = '{"BasisEnrichment":{"entities":[{"neType":"LOCATION","expr":"Caracas","offset":"0:1"}],"language":"English"}, "embersId":"12345"}'
 	while True:
 		while True:
 			try:
@@ -69,7 +72,7 @@ def main():
 			socketLines = sock.makefile()
 			while True:
 				# Write message to socket stream
-				sock.sendall('{"BasisEnrichment":{"entities":[{"neType":"LOCATION","expr":"Caracas","offset":"0:1"}],"language":"English"}, "embersId":"12345"}')
+				sock.sendall(message)
 				sock.sendall('\n')
 
 				# Receive result from socket stream
