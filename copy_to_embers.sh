@@ -10,3 +10,4 @@ cp -r psl-rss/src $1/psl/psl-rss/
 cp -r psl-rss/aux_data $1/psl/psl-rss/
 cp -r psl-rss/pom.xml $1/psl/psl-rss/pom.xml
 cp -r psl-rss/start_PSL_geocoding.sh $1/psl/psl-rss/start_PSL_geocoding.sh
+

@@ -1,31 +1,60 @@
+PSL Harness and PSL Geocoding Model
+=====================
+
+Requirements
+--------------
+
+Running the PSL harness requires python, java and maven 3. 
 
 
+Installation
+-------------
+Currently, the installation process is:
 
-TO INSTALL PSL:
+1) in psl/ run, ``install_psl.sh``: this will use maven to install the PSL binaries in the maven repository (default ``~/.m2``)
 
-With Maven 3 installed, run the install_psl.sh script.
+2) Set up config files:
+	
+	- ``psl/psl-rss/src/main/resources/log4j.properties`` sets up PSL's logging.
+	- ``psl/psl-rss/src/main/resources/psl.properties`` contains various settings for PSL. Most important are:
 
-TO RUN PSL_HARNESS FOR RSS GEOCODING:
+		- ``rss.dbpath`` file system path where H2 database file will be stored
+		- ``rss.auxdatapath`` file system path where gazatteer, and precomputed predicates are stored (currently psl/psl-rss/aux_data)
+		- ``rss.jsonserver.port`` local port to send messages from python to java
+		- ``rss.jsonserver.processor`` name of PSL program to run on messages (currently RSSLocationProcessor)
+		- ``rss.rsslocationprocessor.outputdir`` directory to dump json text files of PSL-predicted locations. Useful for offline evaluation, but it's best to comment this out for production so no files will be output.
 
-From inside the directory embers-psl, the following command will start a test instance of PSL harness, 
 
-	python psl_harness.py --sub tcp://127.0.0.1:1234 --pub tcp://127.0.0.1:4321 --msg_folder ../psl-rss/messages/ --result_folder ../psl-rss/results/ --model edu.umd.cs.linqs.embers.RSSLocationPredictor --project ../psl-rss/ --keep_files
+Instructions for PSL Geocoding
+------------------------------
 
-This runs the RSSLocationPredictor PSL program, watches for EMBERS RSS messages on the local port 1234, and publishes a PSL-enriched feed to port 4321
+1) In a separate shell, start the java server by running the script ``psl/psl-rss/start_PSL_geocoding.sh``. This will compile the java and groovy code, do some initial preprocessesing loading the gazatteer and auxiliary data into the database and then start the server. 
 
-To run through the simulated feed of the GSR-labeled rss articles, use the following command:
+2) Start the python harness 
 
-	python test_publisher.py --pub tcp://127.0.0.1:1234 --json_file ../psl-rss/aux_data/januaryGSRGeoCode.json
+	python embers-psl/psl_harness.py --sub tcp://<hostname>:<incoming port> --pub tcp://<hostname>:<outgoing port> --local_port <port to send messages to java>
 
-From psl-rss/, run 
+3) Wait until something goes wrong
+
+4) Email bert@cs.umd.edu for help with what went wrong
+
+Instructions for offline evaluation
+-----------------------------------
+
+0) To evaluate this system, we can run on the January GSR news articles. Do this by first uncommenting the option ``rss.rsslocationprocessor.outputdir`` and set it to ``./results/``. 
+
+1) Start the psl harness with these options to listen to local ports:
+
+	python psl_harness.py --pub <anything> --sub tcp://127.0.0.1:1234 --local_port 9999
+
+2) And then in a separate shell, start the test feed script
+
+	python test_publisher.py --pub tcp://127.0.0.1:1234 --json_file ../psl-rss/aux_data/januaryGSRGeocode.json
+
+This should process all the January planned protest events.
+
+3) Evaluate against the old system with 
 
 	java -cp ./target/classes:`cat classpath.out` edu.umd.cs.linqs.embers.ResultsEvaluator
 
-to evaluate geolocation accuracy against the GSR.
-
-On production runs of psl_harness.py, omit --keep_files to save disk space. 
-
-e.g.,
-
-	python psl_harness.py --sub tcp://*:1234 --pub tcp://*:4321 --msg_folder ../psl-rss/messages/ --result_folder ../psl-rss/results/ --model edu.umd.cs.linqs.embers.RSSLocationPredictor --project ../psl-rss/
-
+	
