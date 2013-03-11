@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.lang.Thread;
+import java.lang.InterruptedException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.json.JSONException;
@@ -88,6 +90,15 @@ public class JSONServer {
 				OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
 				while (socket.isConnected()) {
 					try {
+						// sleep to reduce busy-waiting load
+						int interval = 1;
+						while (!in.ready()) {
+							log.debug("Client is not ready. Waiting {} ms", interval);
+							Thread.sleep(interval);
+							if (interval < 3000)
+								interval *= 2;
+						}
+
 						String line = in.readLine();
 						if (line == null)
 							break;
@@ -103,6 +114,8 @@ public class JSONServer {
 					} catch (JSONException e) {
 						log.warn("Unable to read JSON object from line");
 						e.printStackTrace();
+					} catch (InterruptedException e) {
+						log.warn("Sleep was interrupted\n" + e.toString());
 					}
 				}
 			} catch (IOException e) {
