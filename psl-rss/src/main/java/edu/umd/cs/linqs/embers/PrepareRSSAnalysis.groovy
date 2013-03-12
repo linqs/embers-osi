@@ -42,14 +42,14 @@ PSLModel m = new PSLModel(this, data)
 /* Defines Gazetteer predicates */
 m.add predicate: "OfficialName", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Alias", types: [ArgumentType.UniqueID, ArgumentType.String]
-m.add predicate: "Location_Type", types: [ArgumentType.UniqueID, ArgumentType.String]
-m.add predicate: "Population", types: [ArgumentType.UniqueID, ArgumentType.Integer]
-m.add predicate: "LatLong", types: [ArgumentType.UniqueID, ArgumentType.Integer, ArgumentType.Integer]
+//m.add predicate: "Location_Type", types: [ArgumentType.UniqueID, ArgumentType.String]
+//m.add predicate: "Population", types: [ArgumentType.UniqueID, ArgumentType.Integer]
+//m.add predicate: "LatLong", types: [ArgumentType.UniqueID, ArgumentType.Integer, ArgumentType.Integer]
 m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
-m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
+//m.add predicate: "Admin2", types: [ArgumentType.UniqueID, ArgumentType.String]
 m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
-m.add predicate: "Neighbor", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+//m.add predicate: "Neighbor", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 m.add predicate: "IsCountry", types: [ArgumentType.String]
 m.add predicate: "IsState", types: [ArgumentType.String]
 
@@ -67,7 +67,7 @@ Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 /* Loads normalized population info */
 InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
 /* Loads neighborhood info */
-InserterUtils.loadDelimitedData(data.getInserter(Neighbor, gazPart), fullNeighborFilePath);
+//InserterUtils.loadDelimitedData(data.getInserter(Neighbor, gazPart), fullNeighborFilePath);
 
 Database db = data.getDatabase(gazPart);
 
@@ -100,18 +100,18 @@ while (line = reader.readLine()) {
 		insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexA]);
 	if (!tokens[optAliasIndexB].equals(""))
 		insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexB]);
-	insertRawArguments(db, Location_Type, tokens[keyIndex], tokens[typeIndex]);
-	insertRawArguments(db, Population, tokens[keyIndex], tokens[popIndex]);
-	insertRawArguments(db, LatLong, tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
+//	insertRawArguments(db, Location_Type, tokens[keyIndex], tokens[typeIndex]);
+//	insertRawArguments(db, Population, tokens[keyIndex], tokens[popIndex]);
+//	insertRawArguments(db, LatLong, tokens[keyIndex], tokens[latIndex], tokens[longIndex]);
 	insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
 	if (tokens.length > admin1Index && !tokens[admin1Index].equals("")) {
 		insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
 		states.add(tokens[admin1Index])	
 	}
-	if (tokens.length > admin2Index && !tokens[admin2Index].equals("")) {
-		insertRawArguments(db, Admin2, tokens[keyIndex], tokens[admin2Index]);
-		//states.add(tokens[admin2Index])
-	}
+//	if (tokens.length > admin2Index && !tokens[admin2Index].equals("")) {
+//		insertRawArguments(db, Admin2, tokens[keyIndex], tokens[admin2Index]);
+//		//states.add(tokens[admin2Index])
+//	}
 
 	countries.add(tokens[countryIndex])
 }
