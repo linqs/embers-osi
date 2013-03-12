@@ -33,24 +33,21 @@ Currently, the installation process is:
 Instructions for PSL Geocoding
 ------------------------------
 
-1. In a separate shell, start the java server by running the script ``psl/psl-rss/start_PSL_geocoding.sh``. This will compile the java and groovy code, do some initial preprocessesing loading the gazatteer and auxiliary data into the database and then start the server. 
+0. To set where PSL and log4j will look for configuration files, use the system properties ```-Dlog4j.configuration=file://[log4j config file path]``` and ```-Dpsl.configuration=file://[psl config file path]```
 
-2. Start the python harness 
+1. (start up java zmq application)
 
-	python embers-psl/psl_harness.py --sub tcp://<hostname>:<incoming port> --pub tcp://<hostname>:<outgoing port> --local port <port to send messages to java>
-
-3. Wait until something goes wrong
-
-4. Email bert@cs.umd.edu for help with what went wrong
 
 Instructions for offline evaluation
 -----------------------------------
+
+Note this uses the old python-to-java harness. An analogous setup is possible with the new native Java application.
 
 0. To evaluate this system, we can run on the January GSR news articles. Do this by first uncommenting the option ``rss.rsslocationprocessor.outputdir`` and set it to ``./results/``. 
 
 1. Start the psl harness with these options to listen to local ports:
 
-	python psl_harness.py --pub <anything> --sub tcp://127.0.0.1:1234 --local_port 9999
+	python psl_harness.py --pub [anything] --sub tcp://127.0.0.1:1234 --local_port 9999
 
 2. And then in a separate shell, start the test feed script
 
@@ -63,3 +60,4 @@ This should process all the January planned protest events.
 	java -cp ./target/classes:`cat classpath.out` edu.umd.cs.linqs.embers.ResultsEvaluator
 
 	
+
