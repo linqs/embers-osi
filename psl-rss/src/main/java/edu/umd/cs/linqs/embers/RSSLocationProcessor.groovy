@@ -1,5 +1,6 @@
 package edu.umd.cs.linqs.embers
 
+import org.json.JSONException;
 import org.json.JSONObject
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +55,13 @@ class RSSLocationProcessor implements JSONProcessor {
 	private final int writePartNum = 1;
 
 	public RSSLocationProcessor() {
-		/* Reinitializes the RDBMS to an empty Datastore */
+		PrepareRSSAnalysis.run();
+		
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, false), cb);
 		read = new Partition(readPartNum)
 		write = new Partition(writePartNum)
 		gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 		m = new PSLModel(this, data)
-
-
 
 		m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, ArgumentType.String, ArgumentType.Integer]
 		m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
@@ -90,6 +90,23 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
 		m.add rule: (PSL_Location(Article, LocID) & Admin1(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
+	}
+	
+	/**
+	 * Adds geolocation enrichment 
+	 * 
+	 * @param jsonString  String representation of BASIS-enriched JSON for RSS
+	 * @return String representation of enriched JSON
+	 * @throws IllegalArgumentException  if jsonString is not valid JSON
+	 */
+	public String process(String jsonString) {
+		try {
+			JSONObject json = new JSONObject(jsonString);
+			return process(json).toString();
+		}
+		catch (JSONException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 
