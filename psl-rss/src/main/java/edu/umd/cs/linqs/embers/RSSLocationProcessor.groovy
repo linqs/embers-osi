@@ -1,5 +1,9 @@
 package edu.umd.cs.linqs.embers
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 import org.json.JSONException;
 import org.json.JSONObject
 import org.slf4j.Logger;
@@ -20,10 +24,14 @@ import edu.umd.cs.psl.evaluation.result.FullInferenceResult;
 import edu.umd.cs.psl.groovy.PSLModel;
 import edu.umd.cs.psl.groovy.PredicateConstraint;
 import edu.umd.cs.psl.model.argument.ArgumentType;
+import edu.umd.cs.psl.model.argument.GroundTerm;
 import edu.umd.cs.psl.model.argument.UniqueID;
 import edu.umd.cs.psl.model.argument.Variable;
 import edu.umd.cs.psl.model.atom.GroundAtom;
 import edu.umd.cs.psl.model.atom.QueryAtom
+import edu.umd.cs.psl.model.atom.RandomVariableAtom;
+import edu.umd.cs.psl.model.predicate.Predicate;
+import edu.umd.cs.psl.ui.loading.InserterUtils;
 import edu.umd.cs.psl.util.database.Queries;
 
 class RSSLocationProcessor implements JSONProcessor {
@@ -55,13 +63,14 @@ class RSSLocationProcessor implements JSONProcessor {
 	private final int writePartNum = 1;
 
 	public RSSLocationProcessor() {
-		PrepareRSSAnalysis.run();
-		
-		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, false), cb);
+		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 		read = new Partition(readPartNum)
 		write = new Partition(writePartNum)
 		gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
+
 		m = new PSLModel(this, data)
+
+		doPrepareRSSAnalysis();
 
 		m.add predicate: "Entity", types: [ArgumentType.UniqueID, ArgumentType.String, ArgumentType.String, ArgumentType.Integer]
 		m.add predicate: "WrittenIn", types: [ArgumentType.UniqueID, ArgumentType.String]
@@ -91,7 +100,94 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add rule: (PSL_Location(Article, LocID) & Admin1(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 	}
-	
+
+	/**
+	 * 
+	 */
+	private void doPrepareRSSAnalysis() {
+		/* Defines Gazetteer predicates */
+		m.add predicate: "OfficialName", types: [ArgumentType.UniqueID, ArgumentType.String]
+		m.add predicate: "Alias", types: [ArgumentType.UniqueID, ArgumentType.String]
+		m.add predicate: "Country", types: [ArgumentType.UniqueID, ArgumentType.String]
+		m.add predicate: "Admin1", types: [ArgumentType.UniqueID, ArgumentType.String]
+		m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
+		m.add predicate: "IsCountry", types: [ArgumentType.String]
+		m.add predicate: "IsState", types: [ArgumentType.String]
+
+		/* Parses gazetteer */
+		String auxDataPath = cb.getString("auxdatapath", "");
+		String gazetteerName = cb.getString("gazetteername", "");
+		String fullGazetteerPath = auxDataPath + gazetteerName;
+		String refersToFileName = cb.getString("referstoname", "");
+		String neighborFileName = cb.getString("neighborname", "");
+		String fullRefersToFilePath = auxDataPath + refersToFileName;
+		String fullNeighborFilePath = auxDataPath + neighborFileName;
+
+		/* Loads normalized population info */
+		InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
+
+		Database db = data.getDatabase(gazPart);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fullGazetteerPath), "utf-8"));
+		String line;
+		String delim = cb.getString("gazetteerdelim", "\t");
+		int keyIndex = 0;
+		/* Uses first name as both official name and an alias */
+		int officialNameIndex = 1;
+		int aliasIndex = 1;
+		int optAliasIndexA = 2;
+		int optAliasIndexB = 3;
+		int typeIndex = 4;
+		int popIndex = 5;
+		int latIndex = 6;
+		int longIndex = 7;
+		int countryIndex = 8;
+		int admin1Index = 9;
+		int admin2Index = 10;
+
+		HashSet<String> countries = new HashSet<String>();
+		HashSet<String> states = new HashSet<String>();
+
+		while (line = reader.readLine()) {
+			line = NormalizeText.stripAccents(line).toLowerCase();
+			String[] tokens = line.split(delim);
+			insertRawArguments(db, OfficialName, tokens[keyIndex], tokens[officialNameIndex]);
+			insertRawArguments(db, Alias, tokens[keyIndex], tokens[aliasIndex]);
+			if (!tokens[optAliasIndexA].equals(""))
+				insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexA]);
+			if (!tokens[optAliasIndexB].equals(""))
+				insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexB]);
+			insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
+			if (tokens.length > admin1Index && !tokens[admin1Index].equals("")) {
+				insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
+				states.add(tokens[admin1Index])
+			}
+
+			countries.add(tokens[countryIndex])
+		}
+
+		for (String country : countries)
+			insertRawArguments(db, IsCountry, country)
+		for (String state : states)
+			insertRawArguments(db, IsState, state)
+
+		db.close();
+
+		countries.clear()
+		states.clear()
+		
+		log.info("Inserted gazetteer into PSL database")
+	}
+
+
+	private void insertRawArguments(Database db, Predicate p, Object... rawArgs) {
+		GroundTerm[] args = Queries.convertArguments(db, p, rawArgs);
+		GroundAtom atom = db.getAtom(p, args);
+		atom.setValue(1.0);
+		if (atom instanceof RandomVariableAtom)
+			atom.commitToDB();
+	}
+
 	/**
 	 * Adds geolocation enrichment 
 	 * 
@@ -228,5 +324,16 @@ class RSSLocationProcessor implements JSONProcessor {
 
 		}
 		return sb.toString();
+	}
+
+	public static void main(String [] args) {
+		RSSLocationProcessor processor = new RSSLocationProcessor();
+
+		String filename = "aux_data/januaryGSRGeoCode.json";
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
+
+				while (reader.ready())
+			processor.process(reader.readLine())
+
 	}
 }
