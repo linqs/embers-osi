@@ -126,15 +126,15 @@ public class ResultsEvaluator {
 			System.out.println("EMBERS city: " + embersCity+ ", PSL city: " + city + ", true city: " + entry.city);
 
 			boolean allCorrect = true;
-			if (country.toLowerCase().equals(entry.country.toLowerCase()))
+			if (NormalizeText.stripAccents(country).toLowerCase().equals(NormalizeText.stripAccents(entry.country).toLowerCase()))
 				correctCountries++;
 			else
 				allCorrect = false;
-			if (state.toLowerCase().equals(entry.state.toLowerCase()))
+			if (NormalizeText.stripAccents(state).toLowerCase().equals(NormalizeText.stripAccents(entry.state).toLowerCase()))
 				correctStates++;
 			else
 				allCorrect = false;
-			if (city.toLowerCase().equals(entry.city.toLowerCase()))
+			if (NormalizeText.stripAccents(city).toLowerCase().equals(NormalizeText.stripAccents(entry.city).toLowerCase()))
 				correctCities++;
 			else
 				allCorrect = false;
