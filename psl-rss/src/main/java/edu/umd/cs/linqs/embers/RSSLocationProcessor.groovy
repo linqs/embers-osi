@@ -62,11 +62,17 @@ class RSSLocationProcessor implements JSONProcessor {
 	private final int readPartNum = 0;
 	private final int writePartNum = 1;
 
+	HashMap<String, String> officialCountries;
+	HashMap<String, String> officialStates;
+
 	public RSSLocationProcessor() {
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 		read = new Partition(readPartNum)
 		write = new Partition(writePartNum)
 		gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
+
+		officialCountries = new HashMap<String>();
+		officialStates = new HashMap<String>();
 
 		m = new PSLModel(this, data)
 
@@ -96,8 +102,8 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add rule: (Entity(Article, C, "LOCATION", Offset) & IsCountry(C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
 		m.add rule: (Entity(Article, S, "LOCATION", Offset) & IsState(S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 
-		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), weight: 1.0, squared: true
-		m.add rule: (PSL_Location(Article, LocID) & Admin1(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
+		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), constraint: true
+		m.add rule: (PSL_Location(Article, LocID) & Admin1(LocID, S)) >> ArticleState(Article, S), constraint: true
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 	}
 
@@ -113,6 +119,8 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
 		m.add predicate: "IsCountry", types: [ArgumentType.String]
 		m.add predicate: "IsState", types: [ArgumentType.String]
+		m.add predicate: "OfficialCountry", types: [ArgumentType.String, ArgumentType.String]
+		m.add predicate: "OfficialState", types: [ArgumentType.String, ArgumentType.String]
 
 		/* Parses gazetteer */
 		String auxDataPath = cb.getString("auxdatapath", "");
@@ -145,13 +153,12 @@ class RSSLocationProcessor implements JSONProcessor {
 		int admin1Index = 9;
 		int admin2Index = 10;
 
-		HashSet<String> countries = new HashSet<String>();
-		HashSet<String> states = new HashSet<String>();
 
 		while (line = reader.readLine()) {
+			String[] rawTokens = line.split(delim);
 			line = NormalizeText.stripAccents(line).toLowerCase();
 			String[] tokens = line.split(delim);
-			insertRawArguments(db, OfficialName, tokens[keyIndex], tokens[officialNameIndex]);
+			insertRawArguments(db, OfficialName, tokens[keyIndex], rawTokens[officialNameIndex]);
 			insertRawArguments(db, Alias, tokens[keyIndex], tokens[aliasIndex]);
 			if (!tokens[optAliasIndexA].equals(""))
 				insertRawArguments(db, Alias, tokens[keyIndex], tokens[optAliasIndexA]);
@@ -160,22 +167,20 @@ class RSSLocationProcessor implements JSONProcessor {
 			insertRawArguments(db, Country, tokens[keyIndex], tokens[countryIndex]);
 			if (tokens.length > admin1Index && !tokens[admin1Index].equals("")) {
 				insertRawArguments(db, Admin1, tokens[keyIndex], tokens[admin1Index]);
-				states.add(tokens[admin1Index])
+				officialStates.put(tokens[admin1Index], rawTokens[admin1Index])
 			}
 
-			countries.add(tokens[countryIndex])
+			officialCountries.put(tokens[countryIndex], rawTokens[countryIndex])
 		}
 
-		for (String country : countries)
+		for (String country : officialCountries.keySet()) {
 			insertRawArguments(db, IsCountry, country)
-		for (String state : states)
+		}
+		for (String state : officialStates.keySet()) {
 			insertRawArguments(db, IsState, state)
-
+		}
 		db.close();
 
-		countries.clear()
-		states.clear()
-		
 		log.info("Inserted gazetteer into PSL database")
 	}
 
@@ -267,24 +272,21 @@ class RSSLocationProcessor implements JSONProcessor {
 
 
 		// look up city and state for location
-		Variable var = new Variable("var")
 		if (predictedLocation == null) {
 			predictedState = ""
 			predictedCity = ""
 		} else {
+			Variable var = new Variable("var")
 			def query = new DatabaseQuery(new QueryAtom(OfficialName, Queries.convertArguments(db, OfficialName, predictedLocation, var)))
 			ResultList list = db.executeQuery(query)
 			predictedCity = list.get(0)[0].getValue()
-			//query = new DatabaseQuery(new QueryAtom(Admin1, Queries.convertArguments(db, Admin1, predictedLocation, var)))
-			//list = db.executeQuery(query)
-			//predictedState = list.get(0)[0].getValue()
+
+			predictedCountry = officialCountries.get(predictedCountry)
+			predictedState = officialStates.get(predictedState)
 		}
 
 		db.close()
 
-		predictedCountry = standardizeCapitals(predictedCountry)
-		predictedState = standardizeCapitals(predictedState)
-		predictedCity = standardizeCapitals(predictedCity)
 
 		log.debug("Location is {}", predictedLocation)
 		log.debug("Country is {}", predictedCountry)
@@ -303,36 +305,13 @@ class RSSLocationProcessor implements JSONProcessor {
 		return loader.getJSONObject();
 	}
 
-	private String standardizeCapitals(String text) {
-		def noCaps = ["of", "de", "del", "en", "el", "la", "las", "los", "dos", "y", "a", "do", "da", "o", "e", "es", "si", "den", "to", "and"] as Set
-
-		if (text.length() == 0)
-			return text;
-		String [] tokens = text.split(" ");
-		StringBuilder sb = new StringBuilder();
-		sb.append(tokens[0].substring(0,1).toUpperCase());
-		if (tokens[0].length() > 1)
-			sb.append(tokens[0].substring(1));
-		for (int i = 1; i < tokens.length; i++) {
-			if (tokens[i].length() > 1 && (i == 0 || !noCaps.contains(tokens[i]))) {
-				sb.append(" " + tokens[i].substring(0,1).toUpperCase());
-				if (tokens[i].length() > 1)
-					sb.append(tokens[i].substring(1));
-
-			} else if (noCaps.contains(tokens[i]))
-				sb.append(" " + tokens[i]);
-
-		}
-		return sb.toString();
-	}
-
 	public static void main(String [] args) {
 		RSSLocationProcessor processor = new RSSLocationProcessor();
 
 		String filename = "aux_data/januaryGSRGeoCode.json";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
 
-				while (reader.ready())
+		while (reader.ready())
 			processor.process(reader.readLine())
 
 	}
