@@ -1268,7 +1268,7 @@
 199378875	San José de Apalta			locality	376	-3462	-7125	Chile	Libertador General Bernardo O'Higgins	Colchagua
 199378887	El Camarón			locality	330	-3462	-7113	Chile	Libertador General Bernardo O'Higgins	Colchagua
 199379166	San Rafael			locality	118950	-3462	-6834	Argentina	Mendoza	San Rafael
-199416163	Buenos Aires			locality	13015875	-3461	-5837	Argentina	Distrito Federal
+199416163	Buenos Aires			locality	13015875	-3461	-5837	Argentina	
 199416364	Cerrillos			locality	2326	-3461	-5636	Uruguay	Canelones
 199450833	Pumanque			locality	769	-3460	-7167	Chile	Libertador General Bernardo O'Higgins	Colchagua
 199450863	Palmilla			locality	2619	-3460	-7137	Chile	Libertador General Bernardo O'Higgins	Colchagua
@@ -6827,7 +6827,7 @@
 267167134	Sorata			locality	2523	-1579	-6866	Bolivia	La Paz
 267203120	Sorejaya			locality	876	-1578	-6880	Bolivia	La Paz
 267203157	Cooco			locality	622	-1578	-6843	Bolivia	La Paz
-267205209	Brasília			locality	2593886	-1578	-4791	Brazil	Distrito Federal
+267205209	Brasília			locality	2593886	-1578	-4791	Brazil	Brasília
 267238664	Caraveli			locality	4321	-1577	-7336	Peru	Arequipa
 267238712	Yanaquihua			locality	670	-1577	-7288	Peru	Arequipa
 267275238	Caranavi			locality	21883	-1576	-6762	Bolivia	La Paz
@@ -12068,7 +12068,7 @@
 361883317	Petare			locality	564946	1052	-6683	Venezuela	Miranda
 361918581	Fundación			locality	52274	1053	-7419	Colombia	Magdalena
 361918849	Santa Rita			locality	47018	1053	-7151	Venezuela	Zulia
-361955307	Caracas			locality	1999790	1054	-6693	Venezuela	Distrito Capital
+361955307	Caracas			locality	1999790	1054	-6693	Venezuela	Caracas
 361989523	Venado			locality	286	1055	-8477	Costa Rica	Alajuela
 362027297	Catia La Mar			locality	167111	1056	-6703	Venezuela	Miranda
 362062698	Urumita			locality	7689	1057	-7302	Colombia	La Guajira
@@ -18204,7 +18204,7 @@
 393704065	El Cerrito			locality	1749	1936	-9935	Mexico	México
 393704066	Huixquilucan de Degollado	Huixquilucan		locality	9919	0	9999	Mexico	México
 393704068	San Jacinto			locality	2315	1936	-9932	Mexico	México
-393704091	Ciudad de México	Mexico City		locality	8447580	1943	-9914	Mexico	Distrito Federal
+393704091	Ciudad de México	Mexico City		locality	8447580	1943	-9914	Mexico	Ciudad de México
 393704102	Los Reyes Acaquilpan	Los Reyes		locality	78068	1936	-9898	Mexico	México
 393704104	Tecamachalco			locality	6970	1936	-9896	Mexico	México
 393704105	Bosques de la Magdalena			locality	2881	1936	-9895	Mexico	México

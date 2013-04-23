@@ -52,6 +52,8 @@ class RSSLocationProcessor implements JSONProcessor {
 	private String fullDBPath = dbPath + dbName;
 	private final String outputDirectory = cb.getString(OUTPUT_DIR_KEY, null);
 
+	private final String BLANK = "-"
+
 	private DataStore data
 	private Partition read
 	private Partition write
@@ -237,9 +239,9 @@ class RSSLocationProcessor implements JSONProcessor {
 		/**
 		 * Compute predicted country, state, and city
 		 */
-		String predictedCountry = "";
-		String predictedCity;
-		String predictedState = "";
+		String predictedCountry = BLANK;
+		String predictedCity = BLANK;
+		String predictedState = BLANK;
 		UniqueID predictedLocation;
 		double countryScore = 0.0;
 		double locationScore = 0.0;
@@ -273,17 +275,35 @@ class RSSLocationProcessor implements JSONProcessor {
 
 		// look up city and state for location
 		if (predictedLocation == null) {
-			predictedState = ""
-			predictedCity = ""
+			predictedCity = BLANK
 		} else {
 			Variable var = new Variable("var")
 			def query = new DatabaseQuery(new QueryAtom(OfficialName, Queries.convertArguments(db, OfficialName, predictedLocation, var)))
 			ResultList list = db.executeQuery(query)
 			predictedCity = list.get(0)[0].getValue()
 
-			predictedCountry = officialCountries.get(predictedCountry)
-			predictedState = officialStates.get(predictedState)
+			// look up state and country
+			query = new DatabaseQuery(new QueryAtom(Admin1, Queries.convertArguments(db, Admin1, predictedLocation, var)))
+			list = db.executeQuery(query)
+			if (list.size() > 0)
+				predictedState = list.get(0)[0].getValue()
+			else
+				predictedState = BLANK
+			
+			query = new DatabaseQuery(new QueryAtom(Country, Queries.convertArguments(db, Country, predictedLocation, var)))
+			list = db.executeQuery(query)
+			if (list.size() > 0)
+				predictedCountry = list.get(0)[0].getValue()	
+			else
+				predictedCountry = BLANK
+
 		}
+
+		if (!predictedState.equals(BLANK)) 
+			predictedState = officialStates.get(predictedState)
+		if (!predictedCountry.equals(BLANK))
+			predictedCountry = officialCountries.get(predictedCountry)
+
 
 		db.close()
 

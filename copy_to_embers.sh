@@ -13,6 +13,7 @@ cp -r psl-rss/start_PSL_geocoding.sh $1/psl/psl-rss/start_PSL_geocoding.sh
 cp -r example_configs $1/psl/
 
 cd psl-rss
+mvn compile
 mvn install
 cd ..
 cp ~/.m2/repository/edu/umd/cs/linqs/embers/psl-rss/1.0-SNAPSHOT/psl-rss-1.0-SNAPSHOT.jar ./psl-rss/target
