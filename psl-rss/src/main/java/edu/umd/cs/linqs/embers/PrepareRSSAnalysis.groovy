@@ -52,6 +52,7 @@ m.add predicate: "RefersTo", types: [ArgumentType.String, ArgumentType.UniqueID]
 //m.add predicate: "Neighbor", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 m.add predicate: "IsCountry", types: [ArgumentType.String]
 m.add predicate: "IsState", types: [ArgumentType.String]
+m.add predicate: "Blacklist", types: [ArgumentType.String]
 
 /* Parses gazetteer */
 String auxDataPath = cb.getString("auxdatapath", "");
@@ -59,8 +60,10 @@ String gazetteerName = cb.getString("gazetteername", "");
 String fullGazetteerPath = auxDataPath + gazetteerName;
 String refersToFileName = cb.getString("referstoname", "");
 String neighborFileName = cb.getString("neighborname", "");
+String blacklistFileName = cb.getString("blacklistname", "");
 String fullRefersToFilePath = auxDataPath + refersToFileName;
 String fullNeighborFilePath = auxDataPath + neighborFileName;
+String blacklistFilePath = auxDataPath + blacklistFileName;
 
 Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 
@@ -68,6 +71,8 @@ Partition gazPart = new Partition(cb.getInt("partitions.gazetteer", -1));
 InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
 /* Loads neighborhood info */
 //InserterUtils.loadDelimitedData(data.getInserter(Neighbor, gazPart), fullNeighborFilePath);
+/* Loads blacklist */
+InserterUtils.loadDelimitedData(data.getInserter(Blacklist, gazPart), blacklistFilePath);
 
 Database db = data.getDatabase(gazPart);
 
