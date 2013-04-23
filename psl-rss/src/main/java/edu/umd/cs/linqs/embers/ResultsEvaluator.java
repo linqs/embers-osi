@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,6 +97,9 @@ public class ResultsEvaluator {
 		File resultsDir = new File(resultsPath);
 		File[] resultsFiles = resultsDir.listFiles();
 
+		List<String> allCorrectExamples = new ArrayList<String>();
+		List<String> allIncorrectExamples = new ArrayList<String>();
+
 		/* Scores each file */
 		for (File resultsFile : resultsFiles) {
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(resultsFile.getAbsolutePath()), "utf-8"));		
@@ -139,9 +143,14 @@ public class ResultsEvaluator {
 			else
 				allCorrect = false;
 
-			if (allCorrect)
+			if (allCorrect) {
 				totalCorrect++;
-
+				allCorrectExamples.add("\n\n" + eventID + ": " + country + ", " + state + ", " + city +
+					"\n" + eventID + ": " + entry.country + ", " + entry.state + ", " + entry.city);
+			} else {
+				allIncorrectExamples.add("\n\n" + eventID + ": " + country + ", " + state + ", " + city +
+					"\n" + eventID + ": " + entry.country + ", " + entry.state + ", " + entry.city);
+			}
 
 
 			allCorrect = true;
@@ -179,6 +188,9 @@ public class ResultsEvaluator {
 		}
 
 		/* Prints results */
+		out.println("Correct examples: " + allCorrectExamples);
+		out.println("Incorrect examples: " + allIncorrectExamples);
+
 		double countryAccuracy = (double) correctCountries / totalResults;
 		double stateAccuracy = (double) correctStates / totalResults;
 		double cityAccuracy = (double) correctCities / totalResults;
