@@ -107,6 +107,10 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C)) >> ArticleCountry(Article, C), constraint: true
 		m.add rule: (PSL_Location(Article, LocID) & Admin1(LocID, S)) >> ArticleState(Article, S), constraint: true
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
+
+		// blacklisting
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID) & Blacklist(Location)) >> ~PSL_Location(Article, LocID), constraint: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Blacklist(Location)) >> ~ArticleState(Article, LocID), constraint: true
 	}
 
 	/**
@@ -123,6 +127,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		m.add predicate: "IsState", types: [ArgumentType.String]
 		m.add predicate: "OfficialCountry", types: [ArgumentType.String, ArgumentType.String]
 		m.add predicate: "OfficialState", types: [ArgumentType.String, ArgumentType.String]
+		m.add predicate: "Blacklist", types: [ArgumentType.String]
 
 		/* Parses gazetteer */
 		String auxDataPath = cb.getString("auxdatapath", "");
@@ -132,9 +137,14 @@ class RSSLocationProcessor implements JSONProcessor {
 		String neighborFileName = cb.getString("neighborname", "");
 		String fullRefersToFilePath = auxDataPath + refersToFileName;
 		String fullNeighborFilePath = auxDataPath + neighborFileName;
+		String blacklistFileName = cb.getString("blacklistname", "");
+		String blacklistFilePath = auxDataPath + blacklistFileName;
 
 		/* Loads normalized population info */
 		InserterUtils.loadDelimitedDataTruth(data.getInserter(RefersTo, gazPart), fullRefersToFilePath);
+
+		/* Loads location blacklist of common non-Latin American location strings */
+		InserterUtils.loadDelimitedData(data.getInserter(Blacklist, gazPart), blacklistFilePath);
 
 		Database db = data.getDatabase(gazPart);
 
@@ -289,17 +299,17 @@ class RSSLocationProcessor implements JSONProcessor {
 				predictedState = list.get(0)[0].getValue()
 			else
 				predictedState = BLANK
-			
+
 			query = new DatabaseQuery(new QueryAtom(Country, Queries.convertArguments(db, Country, predictedLocation, var)))
 			list = db.executeQuery(query)
 			if (list.size() > 0)
-				predictedCountry = list.get(0)[0].getValue()	
+				predictedCountry = list.get(0)[0].getValue()
 			else
 				predictedCountry = BLANK
 
 		}
 
-		if (!predictedState.equals(BLANK)) 
+		if (!predictedState.equals(BLANK))
 			predictedState = officialStates.get(predictedState)
 		if (!predictedCountry.equals(BLANK))
 			predictedCountry = officialCountries.get(predictedCountry)
