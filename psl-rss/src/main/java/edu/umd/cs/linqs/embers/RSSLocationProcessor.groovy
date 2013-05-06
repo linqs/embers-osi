@@ -109,8 +109,11 @@ class RSSLocationProcessor implements JSONProcessor {
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 
 		// blacklisting
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID) & Blacklist(Location)) >> ~PSL_Location(Article, LocID), constraint: true
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Blacklist(Location)) >> ~ArticleState(Article, LocID), constraint: true
+		//		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID) & Blacklist(Location)) >> ~PSL_Location(Article, LocID), constraint: true
+		//		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Blacklist(Location)) >> ~ArticleState(Article, LocID), constraint: true
+
+		// trim all non-latin american countries if the article does not contain the country
+		//		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C) & ArticleCountry(Article, C)) >> Entity(Article, C, "LOCATION", Offset), weight: 10.0, squared: true
 	}
 
 	/**
@@ -338,11 +341,25 @@ class RSSLocationProcessor implements JSONProcessor {
 	public static void main(String [] args) {
 		RSSLocationProcessor processor = new RSSLocationProcessor();
 
-		String filename = "aux_data/januaryGSRGeoCode.json";
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
+//		while (true) {
+			String filename = "aux_data/januaryGSRGeoCode.json";
+//			String filename = "aux_data/rss-content-enriched-2012-12-03-12-36-41.txt";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
 
-		while (reader.ready())
-			processor.process(reader.readLine())
+			while (reader.ready())
+				processor.process(reader.readLine())
+//		}
+//
+//		ConfigBundle config = ConfigManager.getManager().getBundle("rss");
+//
+//		String resultsPath = "./results"; //config.getString("enrichedpath", "");
+//
+//		String gsrPath = config.getString("auxdatapath", "");
+//		String gsrFile = config.getString("gsr", "");
+//		String fullGSRPath = gsrPath + gsrFile;
+//
+//		ResultsComparator eval = new ResultsComparator(resultsPath, fullGSRPath);
+//		eval.printEvalution(System.out);
 
 	}
 }

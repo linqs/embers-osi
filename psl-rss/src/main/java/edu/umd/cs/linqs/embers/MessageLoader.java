@@ -14,6 +14,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.linqs.embers.json.Entity;
 import edu.umd.cs.psl.database.Database;
@@ -31,6 +33,8 @@ import edu.umd.cs.psl.model.predicate.Predicate;
  *
  */
 public class MessageLoader {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private JSONObject json;
 	private List<Entity> entities;
@@ -50,6 +54,7 @@ public class MessageLoader {
 			embersId = json.getString("embersId");
 			language = json.getJSONObject("BasisEnrichment").getString("language");
 
+			log.debug("embersID: {}", embersId);
 
 			entities = new ArrayList<Entity>(entitiesArray.length());
 
@@ -73,7 +78,8 @@ public class MessageLoader {
 			embersId = json.getString("embersId");
 			language = json.getJSONObject("BasisEnrichment").getString("language");
 
-
+			log.debug("embersID: {}", embersId);
+			
 			entities = new ArrayList<Entity>(entitiesArray.length());
 
 			for (int i = 0 ; i < entitiesArray.length(); i++) {
@@ -178,6 +184,7 @@ public class MessageLoader {
 		embersGeoCode.put("country", country);
 		embersGeoCode.put("admin1", state);
 		embersGeoCode.put("city", city);
+		embersGeoCode.put("psl_geocode_version", "PSL 5-6-13");
 		json.put("embersGeoCode", embersGeoCode);
 	}
 
