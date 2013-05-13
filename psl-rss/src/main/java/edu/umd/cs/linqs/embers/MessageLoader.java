@@ -184,7 +184,7 @@ public class MessageLoader {
 		embersGeoCode.put("country", country);
 		embersGeoCode.put("admin1", state);
 		embersGeoCode.put("city", city);
-		embersGeoCode.put("psl_geocode_version", "PSL 5-6-13");
+		embersGeoCode.put("geocode_version", "PSL 5-6-13");
 		json.put("embersGeoCode", embersGeoCode);
 	}
 
