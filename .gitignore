@@ -16,5 +16,8 @@ psl-rss/target/
 messages/
 results/
 
-# Compile python
+# Compiled python
 *.pyc
+
+# json test file
+*testOut.json
