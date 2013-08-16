@@ -1,5 +1,6 @@
 package edu.umd.cs.linqs.embers
 
+import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,6 +30,11 @@ import edu.umd.cs.psl.optimizer.conic.partition.ObjectiveCoefficientCompletePart
 import edu.umd.cs.psl.parser.PSLModelLoader
 import edu.umd.cs.psl.util.database.Queries;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 class PSLJointRewriter implements JSONProcessor {
 
 	private DataStore data;
@@ -47,12 +53,12 @@ class PSLJointRewriter implements JSONProcessor {
 	private final String BLANK = "-";
 
 	def popLookup = [ '011': "Employment and Wages",
-    '012': "Housing",
-    '013': "Energy and Resources",
-    '014': "Other Economic Policies",
-    '015': "Other Government Policies",
-    '016': "Other",
-    '017': "Other"];
+		'012': "Housing",
+		'013': "Energy and Resources",
+		'014': "Other Economic Policies",
+		'015': "Other Government Policies",
+		'016': "Other",
+		'017': "Other"];
 
 	private Partition read;
 	private Partition write;
@@ -209,21 +215,36 @@ class PSLJointRewriter implements JSONProcessor {
 
 		db.close();
 
-		// Replace old predictions with new predictions
+		// if PSL predicts different than original values
+		if (!object.has("population") || !object.getString("population").equals(popLookup.get(newPop))
+		|| !object.has("eventType") || !object.getString("eventType").equals(newType + newViol)) {
 
-		if (object.has("population")) {
+			// point new object to old embersId
 			if (!object.has("derivedFrom"))
 				object.put("derivedFrom", new JSONObject());
-			object.getJSONObject("derivedFrom").put("oldPopulation", object.getString("population"));
-		}
-		object.put("population", popLookup.get(newPop));
+			JSONObject derivedFrom = object.getJSONObject("derivedFrom");
+			if (!derivedFrom.has("derivedIds"))
+				derivedFrom.put("derivedIds", new JSONArray());
+			derivedFrom.getJSONArray("derivedIds").put(object.getString("embersId"));
 
-		if (object.has("eventType")) {
-			if (!object.has("derivedFrom"))
-				object.put("derivedFrom", new JSONObject());
-			object.getJSONObject("derivedFrom").put("oldEventType", object.getString("eventType"));
+			object.put("population", popLookup.get(newPop));
+
+			object.put("eventType", newType + newViol);
+
+			String oldComments = "";
+			if (object.has("comments"))
+				oldComments = object.getString("comments") + ", ";
+			object.put("comments", oldComments + "post-processed using PSL joint predictor v. 0.1");
+
+			// generate new embersId
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+			Date date = new Date();
+			System.out.println(dateFormat.format(date));
+			
+			String newID = getHash(dateFormat.format(date) + object.toString());
+
+			object.put("embersId", newID);
 		}
-		object.put("eventType", newType + newViol);
 
 		return object.toString();
 	}
@@ -248,4 +269,13 @@ class PSLJointRewriter implements JSONProcessor {
 		atom.commitToDB();
 	}
 
+	private String getHash(String text) {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+		md.update(text.getBytes("UTF-8"));
+		
+		byte [] hash = md.digest();
+		
+		return DatatypeConverter.printHexBinary(hash);
+	}
 }
