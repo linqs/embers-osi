@@ -22,8 +22,6 @@ cp -r psl-rewriter/src $1/psl/psl-rewriter/
 cp -r psl-rewriter/pom.xml $1/psl/psl-rewriter/pom.xml
 cp -r psl-rewriter/model.psl $1/psl/psl-rewriter/
 
-rm $1/psl/psl-rss/aux_data/rss-content-enriched-2012-12-03-12-36-41.txt
-
 cd psl-rss
 mvn compile
 mvn install
@@ -37,4 +35,3 @@ mvn install
 cd ..
 cp ~/.m2/repository/edu/umd/cs/linqs/embers/psl-rewriter/1.0-SNAPSHOT/psl-rewriter-1.0-SNAPSHOT.jar ./psl-rewriter/target
 cp psl-rewriter/target/psl-rewriter-1.0-SNAPSHOT.jar $1/psl/psl-rewriter/target/
-
