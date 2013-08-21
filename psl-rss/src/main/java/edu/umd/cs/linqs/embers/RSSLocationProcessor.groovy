@@ -208,13 +208,7 @@ class RSSLocationProcessor implements JSONProcessor {
 			atom.commitToDB();
 	}
 
-	/**
-	 * Adds geolocation enrichment 
-	 * 
-	 * @param jsonString  String representation of BASIS-enriched JSON for RSS
-	 * @return String representation of enriched JSON
-	 * @throws IllegalArgumentException  if jsonString is not valid JSON
-	 */
+	@Override
 	public String process(String jsonString) {
 		try {
 			JSONObject json = new JSONObject(jsonString);
@@ -225,8 +219,6 @@ class RSSLocationProcessor implements JSONProcessor {
 		}
 	}
 
-
-	@Override
 	public JSONObject process(JSONObject json) {
 		data.deletePartition(read)
 		data.deletePartition(write)
