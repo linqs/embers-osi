@@ -215,36 +215,31 @@ class PSLJointRewriter implements JSONProcessor {
 
 		db.close();
 
-		// if PSL predicts different than original values
-		if (!object.has("population") || !object.getString("population").equals(popLookup.get(newPop))
-		|| !object.has("eventType") || !object.getString("eventType").equals(newType + newViol)) {
+		// point new object to old embersId
+		if (!object.has("derivedFrom"))
+			object.put("derivedFrom", new JSONObject());
+		JSONObject derivedFrom = object.getJSONObject("derivedFrom");
+		if (!derivedFrom.has("derivedIds"))
+			derivedFrom.put("derivedIds", new JSONArray());
+		derivedFrom.getJSONArray("derivedIds").put(object.getString("embersId"));
 
-			// point new object to old embersId
-			if (!object.has("derivedFrom"))
-				object.put("derivedFrom", new JSONObject());
-			JSONObject derivedFrom = object.getJSONObject("derivedFrom");
-			if (!derivedFrom.has("derivedIds"))
-				derivedFrom.put("derivedIds", new JSONArray());
-			derivedFrom.getJSONArray("derivedIds").put(object.getString("embersId"));
+		object.put("population", popLookup.get(newPop));
 
-			object.put("population", popLookup.get(newPop));
+		object.put("eventType", newType + newViol);
 
-			object.put("eventType", newType + newViol);
+		String oldComments = "";
+		if (object.has("comments"))
+			oldComments = object.getString("comments") + ", ";
+		object.put("comments", oldComments + "post-processed using PSL joint predictor v. 0.1");
 
-			String oldComments = "";
-			if (object.has("comments"))
-				oldComments = object.getString("comments") + ", ";
-			object.put("comments", oldComments + "post-processed using PSL joint predictor v. 0.1");
+		// generate new embersId
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+		Date date = new Date();
+		System.out.println(dateFormat.format(date));
 
-			// generate new embersId
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-			Date date = new Date();
-			System.out.println(dateFormat.format(date));
-			
-			String newID = getHash(dateFormat.format(date) + object.toString());
+		String newID = getHash(dateFormat.format(date) + object.toString());
 
-			object.put("embersId", newID);
-		}
+		object.put("embersId", newID);
 
 		return object.toString();
 	}
@@ -273,9 +268,9 @@ class PSLJointRewriter implements JSONProcessor {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 
 		md.update(text.getBytes("UTF-8"));
-		
+
 		byte [] hash = md.digest();
-		
+
 		return DatatypeConverter.printHexBinary(hash);
 	}
 }
