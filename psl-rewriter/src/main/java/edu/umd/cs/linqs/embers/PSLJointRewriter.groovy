@@ -125,95 +125,7 @@ class PSLJointRewriter implements JSONProcessor {
 
 	@Override
 	public String process(String json) {
-		data.deletePartition(read);
-		data.deletePartition(write);
-
-		System.out.println("Processing " + json);
-
-		Database db = data.getDatabase(read);
-
 		JSONObject object = new JSONObject(json);
-
-		String id = object.getString("embersId");
-		String country = object.getJSONArray("location").getString(0);
-		insertAtom(1.0, db, countryPred, id, country);
-
-		// load predications
-		Map<String, Double> embersType = new HashMap<String, Double>();
-		JSONObject eventType = object.getJSONObject("classification").getJSONObject("eventType");
-		for (String key : eventType.keys()) {
-			embersType.put(key, eventType.getDouble(key));
-			insertAtom(eventType.getDouble(key), db, embersTypePred, id, key);
-		}
-
-		// load populations
-		Map<String, Double> embersPop = new HashMap<String, Double>();
-		JSONObject population = object.getJSONObject("classification").getJSONObject("population");
-		for (String key : population.keys()) {
-			embersPop.put(key, population.getDouble(key));
-			insertAtom(population.getDouble(key), db, embersPopPred, id, key);
-		}
-
-		// load violence
-		Map<String, Double> embersViol= new HashMap<String, Double>();
-		JSONObject violence = object.getJSONObject("classification").getJSONObject("violence");
-		for (String key : violence.keys()) {
-			embersViol.put(key, violence.getDouble(key));
-			insertAtom(violence.getDouble(key), db, embersViolPred, id, key);
-		}
-
-
-		// insert max and second best values
-		Map.Entry<String, Double> max;
-
-		max = removeMax(embersType); // find highest scoring entry
-		insertAtom(1.0, db, maxTypePred, id, max.getKey());
-		insertAtom(1.0, db, secondTypePred, id, max.getKey());
-		max = removeMax(embersType); // find second-highest scoring entry
-		insertAtom(1.0, db, secondTypePred, id, max.getKey());
-
-		max = removeMax(embersPop); // find highest scoring entry
-		insertAtom(1.0, db, maxPopPred, id, max.getKey());
-		insertAtom(1.0, db, secondPopPred, id, max.getKey());
-		max = removeMax(embersPop); // find second-highest scoring entry
-		insertAtom(1.0, db, secondPopPred, id, max.getKey());
-
-		max = removeMax(embersViol); // find highest scoring entry
-		insertAtom(1.0, db, maxViolPred, id, max.getKey());
-		db.close();
-
-
-		// do inference
-		db = data.getDatabase(write, read);
-		LazyMPEInference mpe = new LazyMPEInference(m, db, cb);
-		FullInferenceResult result = mpe.mpeInference();
-
-		// Read out inferred predictions
-		Set<GroundAtom> results;
-		GroundAtom best;
-
-		results = Queries.getAllAtoms(db, typePred);
-		best = null;
-		for (GroundAtom atom : results)
-			if (best == null || atom.getValue() > best.getValue())
-				best = atom;
-		String newType = best.getArguments()[1].toString();
-
-		results = Queries.getAllAtoms(db, popPred);
-		best = null;
-		for (GroundAtom atom : results)
-			if (best == null || atom.getValue() > best.getValue())
-				best = atom;
-		String newPop = best.getArguments()[1].toString();
-
-		results = Queries.getAllAtoms(db, violPred);
-		best = null;
-		for (GroundAtom atom : results)
-			if (best == null || atom.getValue() > best.getValue())
-				best = atom;
-		String newViol = best.getArguments()[1].toString();
-
-		db.close();
 
 		// point new object to old embersId
 		if (!object.has("derivedFrom"))
@@ -222,10 +134,6 @@ class PSLJointRewriter implements JSONProcessor {
 		if (!derivedFrom.has("derivedIds"))
 			derivedFrom.put("derivedIds", new JSONArray());
 		derivedFrom.getJSONArray("derivedIds").put(object.getString("embersId"));
-
-		object.put("population", popLookup.get(newPop));
-
-		object.put("eventType", newType + newViol);
 
 		String oldComments = "";
 		if (object.has("comments"))
@@ -240,6 +148,101 @@ class PSLJointRewriter implements JSONProcessor {
 		String newID = getHash(dateFormat.format(date) + object.toString());
 
 		object.put("embersId", newID);
+
+		if (object.has("classification")) {
+
+			data.deletePartition(read);
+			data.deletePartition(write);
+
+			System.out.println("Processing " + json);
+
+			Database db = data.getDatabase(read);
+
+			String id = object.getString("embersId");
+			String country = object.getJSONArray("location").getString(0);
+			insertAtom(1.0, db, countryPred, id, country);
+
+			// load predications
+			Map<String, Double> embersType = new HashMap<String, Double>();
+			JSONObject eventType = object.getJSONObject("classification").getJSONObject("eventType");
+			for (String key : eventType.keys()) {
+				embersType.put(key, eventType.getDouble(key));
+				insertAtom(eventType.getDouble(key), db, embersTypePred, id, key);
+			}
+
+			// load populations
+			Map<String, Double> embersPop = new HashMap<String, Double>();
+			JSONObject population = object.getJSONObject("classification").getJSONObject("population");
+			for (String key : population.keys()) {
+				embersPop.put(key, population.getDouble(key));
+				insertAtom(population.getDouble(key), db, embersPopPred, id, key);
+			}
+
+			// load violence
+			Map<String, Double> embersViol= new HashMap<String, Double>();
+			JSONObject violence = object.getJSONObject("classification").getJSONObject("violence");
+			for (String key : violence.keys()) {
+				embersViol.put(key, violence.getDouble(key));
+				insertAtom(violence.getDouble(key), db, embersViolPred, id, key);
+			}
+
+
+			// insert max and second best values
+			Map.Entry<String, Double> max;
+
+			max = removeMax(embersType); // find highest scoring entry
+			insertAtom(1.0, db, maxTypePred, id, max.getKey());
+			insertAtom(1.0, db, secondTypePred, id, max.getKey());
+			max = removeMax(embersType); // find second-highest scoring entry
+			insertAtom(1.0, db, secondTypePred, id, max.getKey());
+
+			max = removeMax(embersPop); // find highest scoring entry
+			insertAtom(1.0, db, maxPopPred, id, max.getKey());
+			insertAtom(1.0, db, secondPopPred, id, max.getKey());
+			max = removeMax(embersPop); // find second-highest scoring entry
+			insertAtom(1.0, db, secondPopPred, id, max.getKey());
+
+			max = removeMax(embersViol); // find highest scoring entry
+			insertAtom(1.0, db, maxViolPred, id, max.getKey());
+			db.close();
+
+
+			// do inference
+			db = data.getDatabase(write, read);
+			LazyMPEInference mpe = new LazyMPEInference(m, db, cb);
+			FullInferenceResult result = mpe.mpeInference();
+
+			// Read out inferred predictions
+			Set<GroundAtom> results;
+			GroundAtom best;
+
+			results = Queries.getAllAtoms(db, typePred);
+			best = null;
+			for (GroundAtom atom : results)
+				if (best == null || atom.getValue() > best.getValue())
+					best = atom;
+			String newType = best.getArguments()[1].toString();
+
+			results = Queries.getAllAtoms(db, popPred);
+			best = null;
+			for (GroundAtom atom : results)
+				if (best == null || atom.getValue() > best.getValue())
+					best = atom;
+			String newPop = best.getArguments()[1].toString();
+
+			results = Queries.getAllAtoms(db, violPred);
+			best = null;
+			for (GroundAtom atom : results)
+				if (best == null || atom.getValue() > best.getValue())
+					best = atom;
+			String newViol = best.getArguments()[1].toString();
+
+			db.close();
+
+			object.put("population", popLookup.get(newPop));
+
+			object.put("eventType", newType + newViol);
+		}
 
 		return object.toString();
 	}
