@@ -1,38 +1,39 @@
 package edu.umd.cs.linqs.embers
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-
-import org.json.JSONException;
+import org.json.JSONException
 import org.json.JSONObject
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import edu.umd.cs.psl.application.inference.LazyMPEInference
-import edu.umd.cs.psl.config.ConfigBundle;
-import edu.umd.cs.psl.config.ConfigManager;
-import edu.umd.cs.psl.database.DataStore;
+import edu.umd.cs.psl.config.ConfigBundle
+import edu.umd.cs.psl.config.ConfigManager
+import edu.umd.cs.psl.database.DataStore
 import edu.umd.cs.psl.database.Database
 import edu.umd.cs.psl.database.DatabaseQuery
 import edu.umd.cs.psl.database.Partition
-import edu.umd.cs.psl.database.ResultList;
-import edu.umd.cs.psl.database.rdbms.RDBMSDataStore;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver;
-import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type;
-import edu.umd.cs.psl.evaluation.result.FullInferenceResult;
-import edu.umd.cs.psl.groovy.PSLModel;
-import edu.umd.cs.psl.groovy.PredicateConstraint;
-import edu.umd.cs.psl.model.argument.ArgumentType;
-import edu.umd.cs.psl.model.argument.GroundTerm;
-import edu.umd.cs.psl.model.argument.UniqueID;
-import edu.umd.cs.psl.model.argument.Variable;
-import edu.umd.cs.psl.model.atom.GroundAtom;
+import edu.umd.cs.psl.database.ResultList
+import edu.umd.cs.psl.database.rdbms.RDBMSDataStore
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver
+import edu.umd.cs.psl.database.rdbms.driver.H2DatabaseDriver.Type
+import edu.umd.cs.psl.evaluation.result.FullInferenceResult
+import edu.umd.cs.psl.groovy.PSLModel
+import edu.umd.cs.psl.groovy.PredicateConstraint
+import edu.umd.cs.psl.model.argument.ArgumentType
+import edu.umd.cs.psl.model.argument.GroundTerm
+import edu.umd.cs.psl.model.argument.UniqueID
+import edu.umd.cs.psl.model.argument.Variable
+import edu.umd.cs.psl.model.atom.GroundAtom
 import edu.umd.cs.psl.model.atom.QueryAtom
-import edu.umd.cs.psl.model.atom.RandomVariableAtom;
-import edu.umd.cs.psl.model.predicate.Predicate;
-import edu.umd.cs.psl.ui.loading.InserterUtils;
-import edu.umd.cs.psl.util.database.Queries;
+import edu.umd.cs.psl.model.atom.RandomVariableAtom
+import edu.umd.cs.psl.model.predicate.Predicate
+import edu.umd.cs.psl.ui.loading.InserterUtils
+import edu.umd.cs.psl.util.database.Queries
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 
 class RSSLocationProcessor implements JSONProcessor {
 
@@ -49,7 +50,10 @@ class RSSLocationProcessor implements JSONProcessor {
 	private final String defaultPath = System.getProperty("java.io.tmpdir");
 	private final String dbPath = cb.getString("dbpath", defaultPath);
 	private String dbName = cb.getString("dbname", "psl");
-	private String fullDBPath = dbPath + dbName;
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+	Date date = new Date();
+	private final String uniqueIdentifier = getHash(dateFormat.format(date));
+	private String fullDBPath = dbPath + dbName + "." + uniqueIdentifier;
 	private final String outputDirectory = cb.getString(OUTPUT_DIR_KEY, null);
 
 	private final String BLANK = "-"
@@ -68,6 +72,7 @@ class RSSLocationProcessor implements JSONProcessor {
 	HashMap<String, String> officialStates;
 
 	public RSSLocationProcessor() {
+		log.debug("Creating database {}", fullDBPath)
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 		read = new Partition(readPartNum)
 		write = new Partition(writePartNum)
@@ -109,8 +114,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		//m.add rule: (PSL_Location(Article, LocID) & Admin2(LocID, S)) >> ArticleState(Article, S), weight: 1.0, squared: true
 
 		// blacklisting
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & RefersTo(Location, LocID) & Blacklist(Location)) >> ~PSL_Location(Article, LocID), constraint: true
-		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Blacklist(Location)) >> ~ArticleState(Article, LocID), constraint: true
+		m.add rule: (Entity(Article, Location, "LOCATION", Offset) & Alias(LocID, Location) & Blacklist(Location)) >> ~PSL_Location(Article, LocID), constraint: true
 
 		// trim all non-latin american countries if the article does not contain the country
 		//		m.add rule: (PSL_Location(Article, LocID) & Country(LocID, C) & ArticleCountry(Article, C)) >> Entity(Article, C, "LOCATION", Offset), weight: 10.0, squared: true
@@ -334,7 +338,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		RSSLocationProcessor processor = new RSSLocationProcessor();
 
 		//		while (true) {
-		String filename = "aux_data/januaryGSRGeoCode.json";
+		String filename = "aux_data/californiaTest.json";
 		//			String filename = "aux_data/rss-content-enriched-2012-12-03-12-36-41.txt";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
 
@@ -342,16 +346,26 @@ class RSSLocationProcessor implements JSONProcessor {
 			processor.process(reader.readLine())
 		}
 
-		ConfigBundle config = ConfigManager.getManager().getBundle("rss");
+//		ConfigBundle config = ConfigManager.getManager().getBundle("rss");
+//
+//		String resultsPath = "./results"; //config.getString("enrichedpath", "");
+//
+//		String gsrPath = config.getString("auxdatapath", "");
+//		String gsrFile = config.getString("gsr", "");
+//		String fullGSRPath = gsrPath + gsrFile;
+//
+//		ResultsComparator eval = new ResultsComparator(resultsPath, fullGSRPath);
+//		eval.printEvalution(System.out);
 
-		String resultsPath = "./results"; //config.getString("enrichedpath", "");
+	}
+	
+	private String getHash(String text) {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-		String gsrPath = config.getString("auxdatapath", "");
-		String gsrFile = config.getString("gsr", "");
-		String fullGSRPath = gsrPath + gsrFile;
+		md.update(text.getBytes("UTF-8"));
 
-		ResultsComparator eval = new ResultsComparator(resultsPath, fullGSRPath);
-		eval.printEvalution(System.out);
+		byte [] hash = md.digest();
 
+		return DatatypeConverter.printHexBinary(hash);
 	}
 }
