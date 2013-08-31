@@ -50,10 +50,7 @@ class RSSLocationProcessor implements JSONProcessor {
 	private final String defaultPath = System.getProperty("java.io.tmpdir");
 	private final String dbPath = cb.getString("dbpath", defaultPath);
 	private String dbName = cb.getString("dbname", "psl");
-	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-	Date date = new Date();
-	private final String uniqueIdentifier = getHash(dateFormat.format(date));
-	private String fullDBPath = dbPath + dbName + "." + uniqueIdentifier;
+	private String fullDBPath = dbPath + dbName;
 	private final String outputDirectory = cb.getString(OUTPUT_DIR_KEY, null);
 
 	private final String BLANK = "-"
@@ -70,8 +67,13 @@ class RSSLocationProcessor implements JSONProcessor {
 
 	HashMap<String, String> officialCountries;
 	HashMap<String, String> officialStates;
-
+	
 	public RSSLocationProcessor() {
+		this("");
+	}
+
+	public RSSLocationProcessor(String identifier) {
+		String fullDBPath = this.fullDBPath + "." + identifier;
 		log.debug("Creating database {}", fullDBPath)
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 		read = new Partition(readPartNum)
@@ -335,7 +337,7 @@ class RSSLocationProcessor implements JSONProcessor {
 	}
 
 	public static void main(String [] args) {
-		RSSLocationProcessor processor = new RSSLocationProcessor();
+		RSSLocationProcessor processor = new RSSLocationProcessor("1234");
 
 		//		while (true) {
 		String filename = "aux_data/californiaTest.json";
