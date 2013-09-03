@@ -67,7 +67,7 @@ class RSSLocationProcessor implements JSONProcessor {
 
 	HashMap<String, String> officialCountries;
 	HashMap<String, String> officialStates;
-	
+
 	public RSSLocationProcessor() {
 		this("");
 	}
@@ -203,6 +203,7 @@ class RSSLocationProcessor implements JSONProcessor {
 		db.close();
 
 		log.info("Inserted gazetteer into PSL database")
+		System.gc();
 	}
 
 
@@ -339,28 +340,29 @@ class RSSLocationProcessor implements JSONProcessor {
 	public static void main(String [] args) {
 		RSSLocationProcessor processor = new RSSLocationProcessor("1234");
 
-		//		while (true) {
-		String filename = "aux_data/californiaTest.json";
-		//			String filename = "aux_data/rss-content-enriched-2012-12-03-12-36-41.txt";
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
+		while (true) {
+			String filename = "aux_data/californiaTest.json";
+			//			String filename = "aux_data/rss-content-enriched-2012-12-03-12-36-41.txt";
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf-8"));
 
-		while (reader.ready()) {
-			processor.process(reader.readLine())
+			while (reader.ready()) {
+				processor.process(reader.readLine())
+			}
 		}
 
-//		ConfigBundle config = ConfigManager.getManager().getBundle("rss");
-//
-//		String resultsPath = "./results"; //config.getString("enrichedpath", "");
-//
-//		String gsrPath = config.getString("auxdatapath", "");
-//		String gsrFile = config.getString("gsr", "");
-//		String fullGSRPath = gsrPath + gsrFile;
-//
-//		ResultsComparator eval = new ResultsComparator(resultsPath, fullGSRPath);
-//		eval.printEvalution(System.out);
+		//		ConfigBundle config = ConfigManager.getManager().getBundle("rss");
+		//
+		//		String resultsPath = "./results"; //config.getString("enrichedpath", "");
+		//
+		//		String gsrPath = config.getString("auxdatapath", "");
+		//		String gsrFile = config.getString("gsr", "");
+		//		String fullGSRPath = gsrPath + gsrFile;
+		//
+		//		ResultsComparator eval = new ResultsComparator(resultsPath, fullGSRPath);
+		//		eval.printEvalution(System.out);
 
 	}
-	
+
 	private String getHash(String text) {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 
