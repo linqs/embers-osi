@@ -17,6 +17,7 @@ cp -r psl-rss/aux_data $1/psl/psl-rss/
 cp -r psl-rss/pom.xml $1/psl/psl-rss/pom.xml
 cp -r psl-rss/start_PSL_geocoding.sh $1/psl/psl-rss/start_PSL_geocoding.sh
 cp -r example_configs $1/psl/
+cp psl-rss/psl-rss-base.h2.db $1/psl/psl-rss/
 
 cp -r psl-rewriter/src $1/psl/psl-rewriter/
 cp -r psl-rewriter/pom.xml $1/psl/psl-rewriter/pom.xml

@@ -52,7 +52,7 @@ class RSSLocationProcessor implements JSONProcessor {
 	private String fullDBPath = dbPath + dbName;
 	private final String baseDBPath = cb.getString("basedbpath", defaultPath);
 	private String baseDBName = cb.getString("basedbname", "psl");
-	private String fullBaseDBPath = dbPath + dbName;
+	private String fullBaseDBPath = baseDBPath + baseDBName;
 	private final String outputDirectory = cb.getString(OUTPUT_DIR_KEY, null);
 
 	private final String BLANK = "-"
@@ -76,7 +76,9 @@ class RSSLocationProcessor implements JSONProcessor {
 		// copy database
 		log.debug("Starting to copy base database");
 		String fullDBPath = this.fullDBPath + "." + identifier;
-		Files.copy(new File(fullBaseDBPath + ".h2.db"), new File(fullDBPath + ".h2.db"));
+		File localDB = new File(fullDBPath + ".h2.db");
+		File baseDB = new File(fullBaseDBPath + ".h2.db");
+		Files.copy(baseDB, localDB);
 
 		log.debug("Copied base database {} to {}", baseDBPath, fullDBPath)
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, false), cb);
