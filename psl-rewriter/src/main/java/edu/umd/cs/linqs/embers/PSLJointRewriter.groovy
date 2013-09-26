@@ -52,13 +52,6 @@ class PSLJointRewriter implements JSONProcessor {
 
 	private final String BLANK = "-";
 
-	def popLookup = [ '011': "Employment and Wages",
-		'012': "Housing",
-		'013': "Energy and Resources",
-		'014': "Other Economic Policies",
-		'015': "Other Government Policies",
-		'016': "Other",
-		'017': "Other"];
 
 	private Partition read;
 	private Partition write;
@@ -158,54 +151,7 @@ class PSLJointRewriter implements JSONProcessor {
 
 			Database db = data.getDatabase(read);
 
-			String id = object.getString("embersId");
-			String country = object.getJSONArray("location").getString(0);
-			insertAtom(1.0, db, countryPred, id, country);
-
-			// load predications
-			Map<String, Double> embersType = new HashMap<String, Double>();
-			JSONObject eventType = object.getJSONObject("classification").getJSONObject("eventType");
-			for (String key : eventType.keys()) {
-				embersType.put(key, eventType.getDouble(key));
-				insertAtom(eventType.getDouble(key), db, embersTypePred, id, key);
-			}
-
-			// load populations
-			Map<String, Double> embersPop = new HashMap<String, Double>();
-			JSONObject population = object.getJSONObject("classification").getJSONObject("population");
-			for (String key : population.keys()) {
-				embersPop.put(key, population.getDouble(key));
-				insertAtom(population.getDouble(key), db, embersPopPred, id, key);
-			}
-
-			// load violence
-			Map<String, Double> embersViol= new HashMap<String, Double>();
-			JSONObject violence = object.getJSONObject("classification").getJSONObject("violence");
-			for (String key : violence.keys()) {
-				embersViol.put(key, violence.getDouble(key));
-				insertAtom(violence.getDouble(key), db, embersViolPred, id, key);
-			}
-
-
-			// insert max and second best values
-			Map.Entry<String, Double> max;
-
-			max = removeMax(embersType); // find highest scoring entry
-			insertAtom(1.0, db, maxTypePred, id, max.getKey());
-			insertAtom(1.0, db, secondTypePred, id, max.getKey());
-			max = removeMax(embersType); // find second-highest scoring entry
-			insertAtom(1.0, db, secondTypePred, id, max.getKey());
-
-			max = removeMax(embersPop); // find highest scoring entry
-			insertAtom(1.0, db, maxPopPred, id, max.getKey());
-			insertAtom(1.0, db, secondPopPred, id, max.getKey());
-			max = removeMax(embersPop); // find second-highest scoring entry
-			insertAtom(1.0, db, secondPopPred, id, max.getKey());
-
-			max = removeMax(embersViol); // find highest scoring entry
-			insertAtom(1.0, db, maxViolPred, id, max.getKey());
-			db.close();
-
+			jsonToPSL(object, db);
 
 			// do inference
 			db = data.getDatabase(write, read);
@@ -239,7 +185,7 @@ class PSLJointRewriter implements JSONProcessor {
 
 			db.close();
 
-			object.put("population", popLookup.get(newPop));
+			object.put("population", newPop);
 
 			object.put("eventType", newType + newViol);
 		}
@@ -247,6 +193,56 @@ class PSLJointRewriter implements JSONProcessor {
 		return object.toString();
 	}
 
+	private void jsonToPSL(JSONObject object, Database db) {
+		
+		String id = object.getString("embersId");
+		String country = object.getJSONArray("location").getString(0);
+		insertAtom(1.0, db, countryPred, id, country);
+
+		// load predications
+		Map<String, Double> embersType = new HashMap<String, Double>();
+		JSONObject eventType = object.getJSONObject("classification").getJSONObject("eventType");
+		for (String key : eventType.keys()) {
+			embersType.put(key, eventType.getDouble(key));
+			insertAtom(eventType.getDouble(key), db, embersTypePred, id, key);
+		}
+
+		// load populations
+		Map<String, Double> embersPop = new HashMap<String, Double>();
+		JSONObject population = object.getJSONObject("classification").getJSONObject("population");
+		for (String key : population.keys()) {
+			embersPop.put(key, population.getDouble(key));
+			insertAtom(population.getDouble(key), db, embersPopPred, id, key);
+		}
+
+		// load violence
+		Map<String, Double> embersViol= new HashMap<String, Double>();
+		JSONObject violence = object.getJSONObject("classification").getJSONObject("violence");
+		for (String key : violence.keys()) {
+			embersViol.put(key, violence.getDouble(key));
+			insertAtom(violence.getDouble(key), db, embersViolPred, id, key);
+		}
+
+		// insert max and second best values
+		Map.Entry<String, Double> max;
+
+		max = removeMax(embersType); // find highest scoring entry
+		insertAtom(1.0, db, maxTypePred, id, max.getKey());
+		insertAtom(1.0, db, secondTypePred, id, max.getKey());
+		max = removeMax(embersType); // find second-highest scoring entry
+		insertAtom(1.0, db, secondTypePred, id, max.getKey());
+
+		max = removeMax(embersPop); // find highest scoring entry
+		insertAtom(1.0, db, maxPopPred, id, max.getKey());
+		insertAtom(1.0, db, secondPopPred, id, max.getKey());
+		max = removeMax(embersPop); // find second-highest scoring entry
+		insertAtom(1.0, db, secondPopPred, id, max.getKey());
+
+		max = removeMax(embersViol); // find highest scoring entry
+		insertAtom(1.0, db, maxViolPred, id, max.getKey());
+		db.close();
+	}
+	
 	private Map.Entry<String, Double> removeMax(Map<String, Double> map) {
 		Map.Entry<String, Double> best = null;
 
