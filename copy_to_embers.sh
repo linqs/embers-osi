@@ -21,6 +21,7 @@ cp psl-rss/psl-rss-base.h2.db $1/psl/psl-rss/
 
 cp -r psl-rewriter/src $1/psl/psl-rewriter/
 cp -r psl-rewriter/pom.xml $1/psl/psl-rewriter/pom.xml
+cp -r psl-rewriter/runTraining.sh $1/psl/psl-rewriter/runTraining.sh
 cp -r psl-rewriter/model.psl $1/psl/psl-rewriter/
 
 cd psl-rss

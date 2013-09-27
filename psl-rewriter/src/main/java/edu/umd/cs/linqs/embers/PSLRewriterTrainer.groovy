@@ -29,6 +29,7 @@ import edu.umd.cs.psl.groovy.PredicateConstraint;
 import edu.umd.cs.psl.model.Model
 import edu.umd.cs.psl.model.argument.ArgumentType
 import edu.umd.cs.psl.model.argument.GroundTerm
+import edu.umd.cs.psl.model.argument.StringAttribute;
 import edu.umd.cs.psl.model.argument.UniqueID
 import edu.umd.cs.psl.model.atom.GroundAtom
 import edu.umd.cs.psl.model.atom.RandomVariableAtom
@@ -53,6 +54,8 @@ class PSLRewriterTrainer {
 	private final String defaultPath = System.getProperty("java.io.tmpdir");
 
 	private final String BLANK = "-";
+
+	private final double SUPPRESS_THRESHOLD;
 
 	private Partition trainRead;
 	private Partition trainWrite;
@@ -79,6 +82,8 @@ class PSLRewriterTrainer {
 	private Predicate popPred;
 	private Predicate typePred;
 	private Predicate violPred;
+
+	private Predicate suppressPred;
 
 	def types = ['011', '012', '013', '014', '015', '016']
 	def violents = ['1', '2']
@@ -109,8 +114,10 @@ class PSLRewriterTrainer {
 		String dbName = cb.getString("dbname", "psl");
 		String fullDBPath = dbPath + dbName;
 
+		SUPPRESS_THRESHOLD = cb.getDouble("suppressthreshold", 0.0);
+
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
-		
+
 		m = new PSLModel(this, data);
 
 		/* 
@@ -119,19 +126,21 @@ class PSLRewriterTrainer {
 		m.add predicate: "city", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "state", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "country", types: [ArgumentType.UniqueID, ArgumentType.String]
-		m.add predicate: "population", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "population", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "type", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "suppress", types: [ArgumentType.UniqueID]
 		m.add predicate: "violent", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
-		m.add predicate: "embersPopulation", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "embersPopulation", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "embersType", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 		m.add predicate: "embersViolent", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
-		m.add predicate: "maxPopulation", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "maxPopulation", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "maxType", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
 		m.add predicate: "maxViolent", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
-		m.add predicate: "secondPopulation", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "secondPopulation", types: [ArgumentType.UniqueID, ArgumentType.String]
 		m.add predicate: "secondType", types: [ArgumentType.UniqueID, ArgumentType.UniqueID]
+		m.add predicate: "suppress", types: [ArgumentType.UniqueID]
 
-		
+
 		// save predicates as java objects (to avoid using groovy tricks)
 
 		PredicateFactory pf = PredicateFactory.getFactory();
@@ -151,7 +160,10 @@ class PSLRewriterTrainer {
 		popPred = pf.getPredicate("population");
 		typePred = pf.getPredicate("type");
 		violPred = pf.getPredicate("violent");
-		
+
+		suppressPred = pf.getPredicate("suppress");
+
+
 		/**
 		 * Add rules with default weights
 		 */
@@ -174,27 +186,37 @@ class PSLRewriterTrainer {
 
 		for (String E : types) {
 			UniqueID e = data.getUniqueID(E)
-			for (String P : pops) {
-				UniqueID p = data.getUniqueID(P)
+			for (String p : pops) {
 				m.add rule: (type(A, e)) >> population(A, p), weight: initialWeight, squared: true
 				m.add rule: (population(A, p)) >> type(A, e), weight: initialWeight, squared: true
+
+				m.add rule: (type(A, e) & population(A, p)) >> suppress(A), weight: initialWeight, squared: true
+				m.add rule: (type(A, e) & population(A, p)) >> ~suppress(A), weight: initialWeight, squared: true
 			}
 		}
 
 		def countries = ["Argentina","Brazil","Chile","Colombia","Ecuador","El Salvador","Mexico","Paraguay","Uruguay","Venezuela"]
 
 		for (String c : countries) {
-			for (String P : pops) {
-				UniqueID p = data.getUniqueID(P)
+			for (String p : pops) {
 				m.add rule: (country(A, c)) >> population(A, p), weight: initialWeight, squared: true
+
+				m.add rule: (country(A, c) & population(A, p)) >> suppress(A), weight: initialWeight, squared: true
+				m.add rule: (country(A, c) & population(A, p)) >> ~suppress(A), weight: initialWeight, squared: true
 			}
 			for (String V : violents) {
 				UniqueID v = data.getUniqueID(V)
 				m.add rule: (country(A, c)) >> violent(A, v), weight: initialWeight, squared: true
+
+				m.add rule: (country(A, c) & violent(A, v)) >> suppress(A), weight: initialWeight, squared: true
+				m.add rule: (country(A, c) & violent(A, v)) >> ~suppress(A), weight: initialWeight, squared: true
 			}
 			for (String E : types) {
 				UniqueID e = data.getUniqueID(E)
 				m.add rule: (country(A, c)) >> type(A, e), weight: initialWeight, squared: true
+
+				m.add rule: (country(A, c) & type(A, e)) >> suppress(A), weight: initialWeight, squared: true
+				m.add rule: (country(A, c) & type(A, e)) >> ~suppress(A), weight: initialWeight, squared: true
 			}
 		}
 
@@ -223,28 +245,32 @@ class PSLRewriterTrainer {
 			populate(writeDB, type, id, types)
 			populate(writeDB, violent, id, violents)
 			populate(writeDB, population, id, pops)
+
+			RandomVariableAtom atom = writeDB.getAtom(suppress, id);
+			atom.setValue(0.0);
+			atom.commitToDB();
 		}
 
 		writeDB.close()
 
 		log.info("Finished loading and populating")
 	}
-	
+
 	/**
 	 * runs weight learning
 	 */
 	public void learn() {
 		def trainDB = data.getDatabase(trainWrite, trainRead)
-		def labelsDB = data.getDatabase(trainLabel, [violent, population, type] as Set)
+		def labelsDB = data.getDatabase(trainLabel, [violent, population, type, suppress] as Set)
 		//WeightLearningApplication wl = new MaxPseudoLikelihood(m, trainDB, labelsDB, cb)
 		WeightLearningApplication wl = new MaxLikelihoodMPE(m, trainDB, labelsDB, cb)
-		
+
 		wl.learn()
-		
+
 		trainDB.close()
 		labelsDB.close()
 	}
-	
+
 	/**
 	 * output model file
 	 * @param filename output path and filename
@@ -285,6 +311,15 @@ class PSLRewriterTrainer {
 			insertAtom(1.0, labelDB, typePred, embersId, type);
 			insertAtom(1.0, labelDB, popPred, embersId, population);
 			insertAtom(1.0, labelDB, violPred, embersId, violent);
+
+
+			double quality = object.getJSONObject("match_score").getJSONObject("mean_score").getDouble("total_quality");
+
+			if (quality < SUPPRESS_THRESHOLD)
+				insertAtom(1.0, labelDB, suppressPred, embersId);
+			else
+				insertAtom(0.0, labelDB, suppressPred, embersId);
+
 		}
 
 		readDB.close();
@@ -391,13 +426,15 @@ class PSLRewriterTrainer {
 	 */
 	private void populate(Database db, Predicate p, GroundTerm term, List<String> targets) {
 		for (String i : targets) {
-			UniqueID t = db.getUniqueID(i)
-			RandomVariableAtom atom = db.getAtom(p, term, t)
+			GroundTerm [] convertedArgs = Queries.convertArguments(db, p, term, i);
+
+			RandomVariableAtom atom = db.getAtom(p, convertedArgs);
+
 			atom.setValue(0)
 			atom.commitToDB()
 		}
 	}
-	
+
 	/**
 	 * Runs the training. 
 	 * Most parameters are set using psl.properties config file, but the 

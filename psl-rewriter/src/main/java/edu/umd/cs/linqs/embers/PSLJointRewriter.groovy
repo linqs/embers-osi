@@ -78,9 +78,23 @@ class PSLJointRewriter implements JSONProcessor {
 	private Predicate typePred;
 	private Predicate violPred;
 
+	private Predicate suppressPred;
+
 	public PSLJointRewriter() {
 		cb = cm.getBundle(CONFIG_PREFIX);
+		loadConfig();
 
+		String modelFile = cb.getString("model", "");
+		loadModel(modelFile);
+	}
+
+	public PSLJointRewriter(String modelFile) {
+		cb = cm.getBundle(CONFIG_PREFIX);
+		loadConfig();
+		loadModel(modelFile);
+	}
+
+	private void loadConfig() {
 		String dbPath = cb.getString("dbpath", defaultPath);
 		String dbName = cb.getString("dbname", "psl");
 		String fullDBPath = dbPath + dbName;
@@ -88,13 +102,11 @@ class PSLJointRewriter implements JSONProcessor {
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 		read = new Partition(readPartNum);
 		write = new Partition(writePartNum);
+	}
 
-		String savedModel = cb.getString("model", "");
-
-		m = PSLModelLoader.loadModel(savedModel, data);
-
-
-		// load predicates
+	public void loadModel(String filename) {
+		log.info("Loading model {}", filename);
+		m = PSLModelLoader.loadModel(filename, data);
 
 		PredicateFactory pf = PredicateFactory.getFactory();
 
@@ -113,7 +125,7 @@ class PSLJointRewriter implements JSONProcessor {
 		popPred = pf.getPredicate("population");
 		typePred = pf.getPredicate("type");
 		violPred = pf.getPredicate("violent");
-
+		suppressPred = pf.getPredicate("suppress");
 	}
 
 	@Override
@@ -151,7 +163,8 @@ class PSLJointRewriter implements JSONProcessor {
 
 			Database db = data.getDatabase(read);
 
-			jsonToPSL(object, db);
+			String id = jsonToPSL(object, db);
+			db.close();
 
 			// do inference
 			db = data.getDatabase(write, read);
@@ -183,7 +196,18 @@ class PSLJointRewriter implements JSONProcessor {
 					best = atom;
 			String newViol = best.getArguments()[1].toString();
 
+
+			// extract predicted suppress predicate
+			if (suppressPred != null) {
+
+				double suppress = db.getAtom(suppressPred, db.getUniqueID(id)).getValue();
+				object.put("suppress", suppress > 0.5);
+
+			}
+
 			db.close();
+
+			// insert predicted values into new json warning
 
 			object.put("population", newPop);
 
@@ -193,8 +217,8 @@ class PSLJointRewriter implements JSONProcessor {
 		return object.toString();
 	}
 
-	private void jsonToPSL(JSONObject object, Database db) {
-		
+	private String jsonToPSL(JSONObject object, Database db) {
+
 		String id = object.getString("embersId");
 		String country = object.getJSONArray("location").getString(0);
 		insertAtom(1.0, db, countryPred, id, country);
@@ -240,9 +264,9 @@ class PSLJointRewriter implements JSONProcessor {
 
 		max = removeMax(embersViol); // find highest scoring entry
 		insertAtom(1.0, db, maxViolPred, id, max.getKey());
-		db.close();
+		return id;
 	}
-	
+
 	private Map.Entry<String, Double> removeMax(Map<String, Double> map) {
 		Map.Entry<String, Double> best = null;
 

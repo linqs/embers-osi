@@ -27,149 +27,149 @@ Model:
 {0.03278941370699956} EMBERSPOPULATION(E, T) >> POPULATION(E, T) {squared}
 {0.2140515795029688} MAXPOPULATION(E, T) >> POPULATION(E, T) {squared}
 {0.12825994109093491} SECONDPOPULATION(E, T) >> POPULATION(E, T) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, General Population) {squared}
-{0.0} POPULATION(A, General Population) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Business) {squared}
-{0.0} POPULATION(A, Business) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Ethnic) {squared}
-{0.00555901966929309} POPULATION(A, Ethnic) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Legal) {squared}
-{0.0} POPULATION(A, Legal) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Education) {squared}
-{0.03676019676673174} POPULATION(A, Education) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Medical) {squared}
-{0.0} POPULATION(A, Medical) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Media) {squared}
-{0.0} POPULATION(A, Media) >> TYPE(A, 011) {squared}
-{0.01456547853441984} TYPE(A, 011) >> POPULATION(A, Labor) {squared}
-{0.003475864379495039} POPULATION(A, Labor) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} POPULATION(A, Refugees/Displaced) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 011) >> POPULATION(A, Agricultural) {squared}
-{0.0} POPULATION(A, Agricultural) >> TYPE(A, 011) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, General Population) {squared}
-{0.021632591031193988} POPULATION(A, General Population) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Business) {squared}
-{0.0} POPULATION(A, Business) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Ethnic) {squared}
-{0.007902256971274998} POPULATION(A, Ethnic) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Legal) {squared}
-{0.0013357849504370754} POPULATION(A, Legal) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Education) {squared}
-{0.059198816518398624} POPULATION(A, Education) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Medical) {squared}
-{4.621344381301064E-4} POPULATION(A, Medical) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Media) {squared}
-{0.0} POPULATION(A, Media) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Labor) {squared}
-{0.0} POPULATION(A, Labor) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0044201732612923275} POPULATION(A, Refugees/Displaced) >> TYPE(A, 012) {squared}
-{0.0} TYPE(A, 012) >> POPULATION(A, Agricultural) {squared}
-{8.449133921856046E-4} POPULATION(A, Agricultural) >> TYPE(A, 012) {squared}
-{0.011206329847718636} TYPE(A, 013) >> POPULATION(A, General Population) {squared}
-{0.0554142230629173} POPULATION(A, General Population) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Business) {squared}
-{0.0} POPULATION(A, Business) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Ethnic) {squared}
-{0.0} POPULATION(A, Ethnic) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Legal) {squared}
-{0.0} POPULATION(A, Legal) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Education) {squared}
-{0.010248635537382427} POPULATION(A, Education) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Medical) {squared}
-{0.0} POPULATION(A, Medical) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Media) {squared}
-{0.0} POPULATION(A, Media) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Labor) {squared}
-{0.0} POPULATION(A, Labor) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} POPULATION(A, Refugees/Displaced) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 013) >> POPULATION(A, Agricultural) {squared}
-{0.0} POPULATION(A, Agricultural) >> TYPE(A, 013) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, General Population) {squared}
-{0.03396618007558805} POPULATION(A, General Population) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Business) {squared}
-{0.0} POPULATION(A, Business) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Ethnic) {squared}
-{0.0} POPULATION(A, Ethnic) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Legal) {squared}
-{0.0015345921074947284} POPULATION(A, Legal) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Education) {squared}
-{0.03215801267977121} POPULATION(A, Education) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Medical) {squared}
-{0.0} POPULATION(A, Medical) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Media) {squared}
-{0.0} POPULATION(A, Media) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Labor) {squared}
-{0.0} POPULATION(A, Labor) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} POPULATION(A, Refugees/Displaced) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 014) >> POPULATION(A, Agricultural) {squared}
-{1.9932002004544968E-4} POPULATION(A, Agricultural) >> TYPE(A, 014) {squared}
-{0.0} TYPE(A, 015) >> POPULATION(A, General Population) {squared}
-{0.0} POPULATION(A, General Population) >> TYPE(A, 015) {squared}
-{0.04604317762940692} TYPE(A, 015) >> POPULATION(A, Business) {squared}
-{8.364669634611559E-4} POPULATION(A, Business) >> TYPE(A, 015) {squared}
-{0.046319059480611845} TYPE(A, 015) >> POPULATION(A, Ethnic) {squared}
-{0.00817746974863957} POPULATION(A, Ethnic) >> TYPE(A, 015) {squared}
-{0.0460109673332637} TYPE(A, 015) >> POPULATION(A, Legal) {squared}
-{0.0021310135786676903} POPULATION(A, Legal) >> TYPE(A, 015) {squared}
-{0.06358714787038017} TYPE(A, 015) >> POPULATION(A, Education) {squared}
-{0.1255066145073098} POPULATION(A, Education) >> TYPE(A, 015) {squared}
-{0.04448154014108826} TYPE(A, 015) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 015) {squared}
-{0.04653672514119654} TYPE(A, 015) >> POPULATION(A, Medical) {squared}
-{0.0011856834043032364} POPULATION(A, Medical) >> TYPE(A, 015) {squared}
-{0.04481812439091776} TYPE(A, 015) >> POPULATION(A, Media) {squared}
-{2.4886195598935254E-5} POPULATION(A, Media) >> TYPE(A, 015) {squared}
-{0.0} TYPE(A, 015) >> POPULATION(A, Labor) {squared}
-{0.0} POPULATION(A, Labor) >> TYPE(A, 015) {squared}
-{0.043929844364493056} TYPE(A, 015) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} POPULATION(A, Refugees/Displaced) >> TYPE(A, 015) {squared}
-{0.04010000410519613} TYPE(A, 015) >> POPULATION(A, Agricultural) {squared}
-{7.135422135280348E-4} POPULATION(A, Agricultural) >> TYPE(A, 015) {squared}
-{0.03429809635179029} TYPE(A, 016) >> POPULATION(A, General Population) {squared}
-{0.043010450197565823} POPULATION(A, General Population) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Business) {squared}
-{0.0} POPULATION(A, Business) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Ethnic) {squared}
-{0.0} POPULATION(A, Ethnic) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Legal) {squared}
-{4.8011215942962E-4} POPULATION(A, Legal) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Education) {squared}
-{0.00289626141281719} POPULATION(A, Education) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Religious) {squared}
-{0.0} POPULATION(A, Religious) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Medical) {squared}
-{0.0} POPULATION(A, Medical) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Media) {squared}
-{0.0} POPULATION(A, Media) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Labor) {squared}
-{0.0} POPULATION(A, Labor) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} POPULATION(A, Refugees/Displaced) >> TYPE(A, 016) {squared}
-{0.0} TYPE(A, 016) >> POPULATION(A, Agricultural) {squared}
-{0.0} POPULATION(A, Agricultural) >> TYPE(A, 016) {squared}
-{0.2656490875780595} COUNTRY(A, 'Argentina') >> POPULATION(A, General Population) {squared}
-{0.016002983620191043} COUNTRY(A, 'Argentina') >> POPULATION(A, Business) {squared}
-{0.022795286918851163} COUNTRY(A, 'Argentina') >> POPULATION(A, Ethnic) {squared}
-{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, Legal) {squared}
-{0.022021303762539902} COUNTRY(A, 'Argentina') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, Religious) {squared}
-{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, Media) {squared}
-{0.054812693671585325} COUNTRY(A, 'Argentina') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.01764705882352941} COUNTRY(A, 'Argentina') >> POPULATION(A, Agricultural) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'General Population') {squared}
+{0.0} POPULATION(A, 'General Population') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Business') {squared}
+{0.0} POPULATION(A, 'Business') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Ethnic') {squared}
+{0.00555901966929309} POPULATION(A, 'Ethnic') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Legal') {squared}
+{0.0} POPULATION(A, 'Legal') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Education') {squared}
+{0.03676019676673174} POPULATION(A, 'Education') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Medical') {squared}
+{0.0} POPULATION(A, 'Medical') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Media') {squared}
+{0.0} POPULATION(A, 'Media') >> TYPE(A, 011) {squared}
+{0.01456547853441984} TYPE(A, 011) >> POPULATION(A, 'Labor') {squared}
+{0.003475864379495039} POPULATION(A, 'Labor') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 011) >> POPULATION(A, 'Agricultural') {squared}
+{0.0} POPULATION(A, 'Agricultural') >> TYPE(A, 011) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'General Population') {squared}
+{0.021632591031193988} POPULATION(A, 'General Population') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Business') {squared}
+{0.0} POPULATION(A, 'Business') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Ethnic') {squared}
+{0.007902256971274998} POPULATION(A, 'Ethnic') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Legal') {squared}
+{0.0013357849504370754} POPULATION(A, 'Legal') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Education') {squared}
+{0.059198816518398624} POPULATION(A, 'Education') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Medical') {squared}
+{4.621344381301064E-4} POPULATION(A, 'Medical') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Media') {squared}
+{0.0} POPULATION(A, 'Media') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Labor') {squared}
+{0.0} POPULATION(A, 'Labor') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0044201732612923275} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 012) {squared}
+{0.0} TYPE(A, 012) >> POPULATION(A, 'Agricultural') {squared}
+{8.449133921856046E-4} POPULATION(A, 'Agricultural') >> TYPE(A, 012) {squared}
+{0.011206329847718636} TYPE(A, 013) >> POPULATION(A, 'General Population') {squared}
+{0.0554142230629173} POPULATION(A, 'General Population') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Business') {squared}
+{0.0} POPULATION(A, 'Business') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Ethnic') {squared}
+{0.0} POPULATION(A, 'Ethnic') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Legal') {squared}
+{0.0} POPULATION(A, 'Legal') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Education') {squared}
+{0.010248635537382427} POPULATION(A, 'Education') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Medical') {squared}
+{0.0} POPULATION(A, 'Medical') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Media') {squared}
+{0.0} POPULATION(A, 'Media') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Labor') {squared}
+{0.0} POPULATION(A, 'Labor') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 013) >> POPULATION(A, 'Agricultural') {squared}
+{0.0} POPULATION(A, 'Agricultural') >> TYPE(A, 013) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'General Population') {squared}
+{0.03396618007558805} POPULATION(A, 'General Population') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Business') {squared}
+{0.0} POPULATION(A, 'Business') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Ethnic') {squared}
+{0.0} POPULATION(A, 'Ethnic') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Legal') {squared}
+{0.0015345921074947284} POPULATION(A, 'Legal') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Education') {squared}
+{0.03215801267977121} POPULATION(A, 'Education') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Medical') {squared}
+{0.0} POPULATION(A, 'Medical') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Media') {squared}
+{0.0} POPULATION(A, 'Media') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Labor') {squared}
+{0.0} POPULATION(A, 'Labor') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 014) >> POPULATION(A, 'Agricultural') {squared}
+{1.9932002004544968E-4} POPULATION(A, 'Agricultural') >> TYPE(A, 014) {squared}
+{0.0} TYPE(A, 015) >> POPULATION(A, 'General Population') {squared}
+{0.0} POPULATION(A, 'General Population') >> TYPE(A, 015) {squared}
+{0.04604317762940692} TYPE(A, 015) >> POPULATION(A, 'Business') {squared}
+{8.364669634611559E-4} POPULATION(A, 'Business') >> TYPE(A, 015) {squared}
+{0.046319059480611845} TYPE(A, 015) >> POPULATION(A, 'Ethnic') {squared}
+{0.00817746974863957} POPULATION(A, 'Ethnic') >> TYPE(A, 015) {squared}
+{0.0460109673332637} TYPE(A, 015) >> POPULATION(A, 'Legal') {squared}
+{0.0021310135786676903} POPULATION(A, 'Legal') >> TYPE(A, 015) {squared}
+{0.06358714787038017} TYPE(A, 015) >> POPULATION(A, 'Education') {squared}
+{0.1255066145073098} POPULATION(A, 'Education') >> TYPE(A, 015) {squared}
+{0.04448154014108826} TYPE(A, 015) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 015) {squared}
+{0.04653672514119654} TYPE(A, 015) >> POPULATION(A, 'Medical') {squared}
+{0.0011856834043032364} POPULATION(A, 'Medical') >> TYPE(A, 015) {squared}
+{0.04481812439091776} TYPE(A, 015) >> POPULATION(A, 'Media') {squared}
+{2.4886195598935254E-5} POPULATION(A, 'Media') >> TYPE(A, 015) {squared}
+{0.0} TYPE(A, 015) >> POPULATION(A, 'Labor') {squared}
+{0.0} POPULATION(A, 'Labor') >> TYPE(A, 015) {squared}
+{0.043929844364493056} TYPE(A, 015) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 015) {squared}
+{0.04010000410519613} TYPE(A, 015) >> POPULATION(A, 'Agricultural') {squared}
+{7.135422135280348E-4} POPULATION(A, 'Agricultural') >> TYPE(A, 015) {squared}
+{0.03429809635179029} TYPE(A, 016) >> POPULATION(A, 'General Population') {squared}
+{0.043010450197565823} POPULATION(A, 'General Population') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Business') {squared}
+{0.0} POPULATION(A, 'Business') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Ethnic') {squared}
+{0.0} POPULATION(A, 'Ethnic') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Legal') {squared}
+{4.8011215942962E-4} POPULATION(A, 'Legal') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Education') {squared}
+{0.00289626141281719} POPULATION(A, 'Education') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Religious') {squared}
+{0.0} POPULATION(A, 'Religious') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Medical') {squared}
+{0.0} POPULATION(A, 'Medical') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Media') {squared}
+{0.0} POPULATION(A, 'Media') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Labor') {squared}
+{0.0} POPULATION(A, 'Labor') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} POPULATION(A, 'Refugees/Displaced') >> TYPE(A, 016) {squared}
+{0.0} TYPE(A, 016) >> POPULATION(A, 'Agricultural') {squared}
+{0.0} POPULATION(A, 'Agricultural') >> TYPE(A, 016) {squared}
+{0.2656490875780595} COUNTRY(A, 'Argentina') >> POPULATION(A, 'General Population') {squared}
+{0.016002983620191043} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Business') {squared}
+{0.022795286918851163} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Ethnic') {squared}
+{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Legal') {squared}
+{0.022021303762539902} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Religious') {squared}
+{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Media') {squared}
+{0.054812693671585325} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.01764705882352941} COUNTRY(A, 'Argentina') >> POPULATION(A, 'Agricultural') {squared}
 {0.21090617844136314} COUNTRY(A, 'Argentina') >> VIOLENT(A, 1) {squared}
 {0.06955048274379232} COUNTRY(A, 'Argentina') >> VIOLENT(A, 2) {squared}
 {0.05236733097780222} COUNTRY(A, 'Argentina') >> TYPE(A, 011) {squared}
@@ -178,17 +178,17 @@ Model:
 {0.05293976186084472} COUNTRY(A, 'Argentina') >> TYPE(A, 014) {squared}
 {0.09398651173031082} COUNTRY(A, 'Argentina') >> TYPE(A, 015) {squared}
 {0.020588235294117647} COUNTRY(A, 'Argentina') >> TYPE(A, 016) {squared}
-{0.29724864497762643} COUNTRY(A, 'Brazil') >> POPULATION(A, General Population) {squared}
-{0.026938255526648424} COUNTRY(A, 'Brazil') >> POPULATION(A, Business) {squared}
-{0.03564422803205228} COUNTRY(A, 'Brazil') >> POPULATION(A, Ethnic) {squared}
-{0.01666666666666667} COUNTRY(A, 'Brazil') >> POPULATION(A, Legal) {squared}
-{0.02047508446786054} COUNTRY(A, 'Brazil') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Brazil') >> POPULATION(A, Religious) {squared}
-{0.030202992087559083} COUNTRY(A, 'Brazil') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Brazil') >> POPULATION(A, Media) {squared}
-{0.12414813879978825} COUNTRY(A, 'Brazil') >> POPULATION(A, Labor) {squared}
-{0.045710943375071034} COUNTRY(A, 'Brazil') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.006666666666666666} COUNTRY(A, 'Brazil') >> POPULATION(A, Agricultural) {squared}
+{0.29724864497762643} COUNTRY(A, 'Brazil') >> POPULATION(A, 'General Population') {squared}
+{0.026938255526648424} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Business') {squared}
+{0.03564422803205228} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Ethnic') {squared}
+{0.01666666666666667} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Legal') {squared}
+{0.02047508446786054} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Religious') {squared}
+{0.030202992087559083} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Media') {squared}
+{0.12414813879978825} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Labor') {squared}
+{0.045710943375071034} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.006666666666666666} COUNTRY(A, 'Brazil') >> POPULATION(A, 'Agricultural') {squared}
 {0.21482302154264113} COUNTRY(A, 'Brazil') >> VIOLENT(A, 1) {squared}
 {0.05858174925105895} COUNTRY(A, 'Brazil') >> VIOLENT(A, 2) {squared}
 {0.051090255294795904} COUNTRY(A, 'Brazil') >> TYPE(A, 011) {squared}
@@ -197,17 +197,17 @@ Model:
 {0.014049160978056346} COUNTRY(A, 'Brazil') >> TYPE(A, 014) {squared}
 {0.12061604864853767} COUNTRY(A, 'Brazil') >> TYPE(A, 015) {squared}
 {0.06520860198122388} COUNTRY(A, 'Brazil') >> TYPE(A, 016) {squared}
-{0.2953510545464533} COUNTRY(A, 'Chile') >> POPULATION(A, General Population) {squared}
-{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, Business) {squared}
-{0.013114754098360656} COUNTRY(A, 'Chile') >> POPULATION(A, Ethnic) {squared}
-{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, Legal) {squared}
-{0.031219214929892703} COUNTRY(A, 'Chile') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, Religious) {squared}
-{0.019672131147540982} COUNTRY(A, 'Chile') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, Media) {squared}
-{0.09574588402190409} COUNTRY(A, 'Chile') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.01139547745185239} COUNTRY(A, 'Chile') >> POPULATION(A, Agricultural) {squared}
+{0.2953510545464533} COUNTRY(A, 'Chile') >> POPULATION(A, 'General Population') {squared}
+{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, 'Business') {squared}
+{0.013114754098360656} COUNTRY(A, 'Chile') >> POPULATION(A, 'Ethnic') {squared}
+{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, 'Legal') {squared}
+{0.031219214929892703} COUNTRY(A, 'Chile') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, 'Religious') {squared}
+{0.019672131147540982} COUNTRY(A, 'Chile') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, 'Media') {squared}
+{0.09574588402190409} COUNTRY(A, 'Chile') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'Chile') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.01139547745185239} COUNTRY(A, 'Chile') >> POPULATION(A, 'Agricultural') {squared}
 {0.14728270887915085} COUNTRY(A, 'Chile') >> VIOLENT(A, 1) {squared}
 {0.15316197192459793} COUNTRY(A, 'Chile') >> VIOLENT(A, 2) {squared}
 {0.0841079206006351} COUNTRY(A, 'Chile') >> TYPE(A, 011) {squared}
@@ -216,17 +216,17 @@ Model:
 {0.035878137254318376} COUNTRY(A, 'Chile') >> TYPE(A, 014) {squared}
 {0.11001357723592893} COUNTRY(A, 'Chile') >> TYPE(A, 015) {squared}
 {0.19774233745463607} COUNTRY(A, 'Chile') >> TYPE(A, 016) {squared}
-{0.2564110502213405} COUNTRY(A, 'Colombia') >> POPULATION(A, General Population) {squared}
-{0.0273972602739726} COUNTRY(A, 'Colombia') >> POPULATION(A, Business) {squared}
-{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, Ethnic) {squared}
-{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, Legal) {squared}
-{0.05352847462038822} COUNTRY(A, 'Colombia') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, Religious) {squared}
-{0.03910968521381035} COUNTRY(A, 'Colombia') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, Media) {squared}
-{0.10779984324992334} COUNTRY(A, 'Colombia') >> POPULATION(A, Labor) {squared}
-{0.0273972602739726} COUNTRY(A, 'Colombia') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.029222078417608415} COUNTRY(A, 'Colombia') >> POPULATION(A, Agricultural) {squared}
+{0.2564110502213405} COUNTRY(A, 'Colombia') >> POPULATION(A, 'General Population') {squared}
+{0.0273972602739726} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Business') {squared}
+{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Ethnic') {squared}
+{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Legal') {squared}
+{0.05352847462038822} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Religious') {squared}
+{0.03910968521381035} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Media') {squared}
+{0.10779984324992334} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Labor') {squared}
+{0.0273972602739726} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.029222078417608415} COUNTRY(A, 'Colombia') >> POPULATION(A, 'Agricultural') {squared}
 {0.08987249737522635} COUNTRY(A, 'Colombia') >> VIOLENT(A, 1) {squared}
 {0.001631482987870477} COUNTRY(A, 'Colombia') >> VIOLENT(A, 2) {squared}
 {0.06558662652242515} COUNTRY(A, 'Colombia') >> TYPE(A, 011) {squared}
@@ -235,17 +235,17 @@ Model:
 {0.049147047852034935} COUNTRY(A, 'Colombia') >> TYPE(A, 014) {squared}
 {0.24826092766356417} COUNTRY(A, 'Colombia') >> TYPE(A, 015) {squared}
 {0.05463912243747948} COUNTRY(A, 'Colombia') >> TYPE(A, 016) {squared}
-{0.325282134791987} COUNTRY(A, 'Ecuador') >> POPULATION(A, General Population) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Business) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Ethnic) {squared}
-{0.031578947368421054} COUNTRY(A, 'Ecuador') >> POPULATION(A, Legal) {squared}
-{0.05733095254813279} COUNTRY(A, 'Ecuador') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Religious) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Media) {squared}
-{0.06315789473684211} COUNTRY(A, 'Ecuador') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.031578947368421054} COUNTRY(A, 'Ecuador') >> POPULATION(A, Agricultural) {squared}
+{0.325282134791987} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'General Population') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Business') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Ethnic') {squared}
+{0.031578947368421054} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Legal') {squared}
+{0.05733095254813279} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Religious') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Media') {squared}
+{0.06315789473684211} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.031578947368421054} COUNTRY(A, 'Ecuador') >> POPULATION(A, 'Agricultural') {squared}
 {0.2029536986952672} COUNTRY(A, 'Ecuador') >> VIOLENT(A, 1) {squared}
 {0.028623254772059424} COUNTRY(A, 'Ecuador') >> VIOLENT(A, 2) {squared}
 {0.06195464999080841} COUNTRY(A, 'Ecuador') >> TYPE(A, 011) {squared}
@@ -254,17 +254,17 @@ Model:
 {0.031578947368421054} COUNTRY(A, 'Ecuador') >> TYPE(A, 014) {squared}
 {0.13079323024216222} COUNTRY(A, 'Ecuador') >> TYPE(A, 015) {squared}
 {0.08473244366369075} COUNTRY(A, 'Ecuador') >> TYPE(A, 016) {squared}
-{0.0967775770873964} COUNTRY(A, 'El Salvador') >> POPULATION(A, General Population) {squared}
-{0.08403499734877619} COUNTRY(A, 'El Salvador') >> POPULATION(A, Business) {squared}
-{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, Ethnic) {squared}
-{0.038461538461538464} COUNTRY(A, 'El Salvador') >> POPULATION(A, Legal) {squared}
-{0.05855142858035476} COUNTRY(A, 'El Salvador') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, Religious) {squared}
-{0.04452913524182105} COUNTRY(A, 'El Salvador') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, Media) {squared}
-{0.17612084149806106} COUNTRY(A, 'El Salvador') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, Agricultural) {squared}
+{0.0967775770873964} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'General Population') {squared}
+{0.08403499734877619} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Business') {squared}
+{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Ethnic') {squared}
+{0.038461538461538464} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Legal') {squared}
+{0.05855142858035476} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Religious') {squared}
+{0.04452913524182105} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Media') {squared}
+{0.17612084149806106} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} COUNTRY(A, 'El Salvador') >> POPULATION(A, 'Agricultural') {squared}
 {0.25943694082738844} COUNTRY(A, 'El Salvador') >> VIOLENT(A, 1) {squared}
 {0.049522168058376136} COUNTRY(A, 'El Salvador') >> VIOLENT(A, 2) {squared}
 {0.25274620508801093} COUNTRY(A, 'El Salvador') >> TYPE(A, 011) {squared}
@@ -273,17 +273,17 @@ Model:
 {0.046069623571596205} COUNTRY(A, 'El Salvador') >> TYPE(A, 014) {squared}
 {0.059956066445979436} COUNTRY(A, 'El Salvador') >> TYPE(A, 015) {squared}
 {0.05376801753735694} COUNTRY(A, 'El Salvador') >> TYPE(A, 016) {squared}
-{0.20757975956579583} COUNTRY(A, 'Mexico') >> POPULATION(A, General Population) {squared}
-{0.03413544523138899} COUNTRY(A, 'Mexico') >> POPULATION(A, Business) {squared}
-{0.035555555555555556} COUNTRY(A, 'Mexico') >> POPULATION(A, Ethnic) {squared}
-{0.007407407407407407} COUNTRY(A, 'Mexico') >> POPULATION(A, Legal) {squared}
-{0.15212186171459985} COUNTRY(A, 'Mexico') >> POPULATION(A, Education) {squared}
-{0.014814814814814814} COUNTRY(A, 'Mexico') >> POPULATION(A, Religious) {squared}
-{0.016004099428686528} COUNTRY(A, 'Mexico') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Mexico') >> POPULATION(A, Media) {squared}
-{0.08553848206849315} COUNTRY(A, 'Mexico') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'Mexico') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.02222222222222222} COUNTRY(A, 'Mexico') >> POPULATION(A, Agricultural) {squared}
+{0.20757975956579583} COUNTRY(A, 'Mexico') >> POPULATION(A, 'General Population') {squared}
+{0.03413544523138899} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Business') {squared}
+{0.035555555555555556} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Ethnic') {squared}
+{0.007407407407407407} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Legal') {squared}
+{0.15212186171459985} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Education') {squared}
+{0.014814814814814814} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Religious') {squared}
+{0.016004099428686528} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Media') {squared}
+{0.08553848206849315} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.02222222222222222} COUNTRY(A, 'Mexico') >> POPULATION(A, 'Agricultural') {squared}
 {0.26811789961285315} COUNTRY(A, 'Mexico') >> VIOLENT(A, 1) {squared}
 {0.012944568583873462} COUNTRY(A, 'Mexico') >> VIOLENT(A, 2) {squared}
 {0.14064686543499388} COUNTRY(A, 'Mexico') >> TYPE(A, 011) {squared}
@@ -292,17 +292,17 @@ Model:
 {0.02814814814814815} COUNTRY(A, 'Mexico') >> TYPE(A, 014) {squared}
 {0.14991343215194988} COUNTRY(A, 'Mexico') >> TYPE(A, 015) {squared}
 {0.06074074074074074} COUNTRY(A, 'Mexico') >> TYPE(A, 016) {squared}
-{0.2634634098512729} COUNTRY(A, 'Paraguay') >> POPULATION(A, General Population) {squared}
-{0.026686312079493835} COUNTRY(A, 'Paraguay') >> POPULATION(A, Business) {squared}
-{0.02911522775725591} COUNTRY(A, 'Paraguay') >> POPULATION(A, Ethnic) {squared}
-{0.027480916030534354} COUNTRY(A, 'Paraguay') >> POPULATION(A, Legal) {squared}
-{0.03538149302157834} COUNTRY(A, 'Paraguay') >> POPULATION(A, Education) {squared}
-{0.021605000176669952} COUNTRY(A, 'Paraguay') >> POPULATION(A, Religious) {squared}
-{0.02163755835309488} COUNTRY(A, 'Paraguay') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Paraguay') >> POPULATION(A, Media) {squared}
-{0.08216767766640107} COUNTRY(A, 'Paraguay') >> POPULATION(A, Labor) {squared}
-{0.015267175572519085} COUNTRY(A, 'Paraguay') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.02575444544172074} COUNTRY(A, 'Paraguay') >> POPULATION(A, Agricultural) {squared}
+{0.2634634098512729} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'General Population') {squared}
+{0.026686312079493835} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Business') {squared}
+{0.02911522775725591} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Ethnic') {squared}
+{0.027480916030534354} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Legal') {squared}
+{0.03538149302157834} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Education') {squared}
+{0.021605000176669952} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Religious') {squared}
+{0.02163755835309488} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Media') {squared}
+{0.08216767766640107} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Labor') {squared}
+{0.015267175572519085} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.02575444544172074} COUNTRY(A, 'Paraguay') >> POPULATION(A, 'Agricultural') {squared}
 {0.2704131371571564} COUNTRY(A, 'Paraguay') >> VIOLENT(A, 1) {squared}
 {0.016515476213774843} COUNTRY(A, 'Paraguay') >> VIOLENT(A, 2) {squared}
 {0.0580452901517424} COUNTRY(A, 'Paraguay') >> TYPE(A, 011) {squared}
@@ -311,17 +311,17 @@ Model:
 {0.04580152671755725} COUNTRY(A, 'Paraguay') >> TYPE(A, 014) {squared}
 {0.10668628454409672} COUNTRY(A, 'Paraguay') >> TYPE(A, 015) {squared}
 {0.05607776631281279} COUNTRY(A, 'Paraguay') >> TYPE(A, 016) {squared}
-{0.33674889630734495} COUNTRY(A, 'Uruguay') >> POPULATION(A, General Population) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Business) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Ethnic) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Legal) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Religious) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Medical) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Media) {squared}
-{0.04474500984779876} COUNTRY(A, 'Uruguay') >> POPULATION(A, Labor) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, Agricultural) {squared}
+{0.33674889630734495} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'General Population') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Business') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Ethnic') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Legal') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Religious') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Medical') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Media') {squared}
+{0.04474500984779876} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Labor') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.0} COUNTRY(A, 'Uruguay') >> POPULATION(A, 'Agricultural') {squared}
 {0.23676242958707977} COUNTRY(A, 'Uruguay') >> VIOLENT(A, 1) {squared}
 {0.05150423153644614} COUNTRY(A, 'Uruguay') >> VIOLENT(A, 2) {squared}
 {0.10414678840539718} COUNTRY(A, 'Uruguay') >> TYPE(A, 011) {squared}
@@ -330,17 +330,17 @@ Model:
 {0.0} COUNTRY(A, 'Uruguay') >> TYPE(A, 014) {squared}
 {0.1550989900469062} COUNTRY(A, 'Uruguay') >> TYPE(A, 015) {squared}
 {0.03818548530504456} COUNTRY(A, 'Uruguay') >> TYPE(A, 016) {squared}
-{0.17757277634471821} COUNTRY(A, 'Venezuela') >> POPULATION(A, General Population) {squared}
-{0.0} COUNTRY(A, 'Venezuela') >> POPULATION(A, Business) {squared}
-{0.030238264492508993} COUNTRY(A, 'Venezuela') >> POPULATION(A, Ethnic) {squared}
-{0.011173184357541898} COUNTRY(A, 'Venezuela') >> POPULATION(A, Legal) {squared}
-{0.09173181100061344} COUNTRY(A, 'Venezuela') >> POPULATION(A, Education) {squared}
-{0.0} COUNTRY(A, 'Venezuela') >> POPULATION(A, Religious) {squared}
-{0.02256797473059499} COUNTRY(A, 'Venezuela') >> POPULATION(A, Medical) {squared}
-{0.011173184357541898} COUNTRY(A, 'Venezuela') >> POPULATION(A, Media) {squared}
-{0.12068087533109369} COUNTRY(A, 'Venezuela') >> POPULATION(A, Labor) {squared}
-{0.033519553072625705} COUNTRY(A, 'Venezuela') >> POPULATION(A, Refugees/Displaced) {squared}
-{0.009497612507158268} COUNTRY(A, 'Venezuela') >> POPULATION(A, Agricultural) {squared}
+{0.17757277634471821} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'General Population') {squared}
+{0.0} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Business') {squared}
+{0.030238264492508993} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Ethnic') {squared}
+{0.011173184357541898} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Legal') {squared}
+{0.09173181100061344} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Education') {squared}
+{0.0} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Religious') {squared}
+{0.02256797473059499} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Medical') {squared}
+{0.011173184357541898} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Media') {squared}
+{0.12068087533109369} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Labor') {squared}
+{0.033519553072625705} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Refugees/Displaced') {squared}
+{0.009497612507158268} COUNTRY(A, 'Venezuela') >> POPULATION(A, 'Agricultural') {squared}
 {0.21490796557945108} COUNTRY(A, 'Venezuela') >> VIOLENT(A, 1) {squared}
 {0.07661362549773683} COUNTRY(A, 'Venezuela') >> VIOLENT(A, 2) {squared}
 {0.10309499168738631} COUNTRY(A, 'Venezuela') >> TYPE(A, 011) {squared}
