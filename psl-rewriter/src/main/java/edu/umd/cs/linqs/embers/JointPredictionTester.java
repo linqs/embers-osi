@@ -8,14 +8,14 @@ import java.util.Scanner;
 public class JointPredictionTester {
 
 	public static void main(String [] args) {
-		if (args.length < 3) 
+		if (args.length < 2) 
 			throw new IllegalArgumentException("Usage: JointPredictionTester <input_json_file> <output_json_file> <optional_model>");
 		
 		try {
 			Scanner scanner = new Scanner(new File(args[0]));
 			FileWriter fw;
 			fw = new FileWriter(new File(args[1]));
-			PSLJointRewriter rewriter = new PSLJointRewriter(args[2]);
+			PSLJointRewriter rewriter = (args.length < 3)? new PSLJointRewriter(): new PSLJointRewriter(args[2]);
 			
 			while (scanner.hasNext()) {
 				String line = scanner.nextLine();
