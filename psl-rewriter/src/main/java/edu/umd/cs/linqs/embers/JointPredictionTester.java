@@ -21,6 +21,11 @@ public class JointPredictionTester {
 		int pslTypeCorrect = 0;
 		int pslViolentCorrect = 0;
 		int pslPopulationCorrect = 0;
+		
+		int suppressCount = 0;
+		int emitCount = 0;
+		double suppressQuality = 0;
+		double emitQuality = 0;
 
 		try {
 			Scanner scanner = new Scanner(new File(args[0]));
@@ -57,8 +62,6 @@ public class JointPredictionTester {
 						String pslViolent = pslEventType.substring(4, 4);
 						String pslPopulation = pslWarning.getString("population");
 						
-						System.out.println(pslPopulation + " should be " + population);
-
 						total++;
 						if (type.equals(originalType)) 
 							originalTypeCorrect++;
@@ -73,7 +76,13 @@ public class JointPredictionTester {
 						if (population.equals(pslPopulation)) 
 							pslPopulationCorrect++;
 						
-						System.out.println(pslType);
+						if (pslWarning.getBoolean("suppress")) {
+							suppressCount++;
+							suppressQuality += originalWarning.getJSONObject("match_score").getJSONObject("mean_score").getDouble("total_quality");
+						} else {
+							emitCount++;
+							emitQuality += originalWarning.getJSONObject("match_score").getJSONObject("mean_score").getDouble("total_quality");
+						}
 					}
 
 				} catch (JSONException e) {
@@ -87,10 +96,13 @@ public class JointPredictionTester {
 				System.out.println("Type accuracy: " + (double) originalTypeCorrect / (double) total + " (" + originalTypeCorrect + " / " + total + ")");
 				System.out.println("Violent accuracy: " + (double) originalViolentCorrect / (double) total + " (" + originalViolentCorrect + " / " + total + ")");
 				System.out.println("Population accuracy: " + (double) originalPopulationCorrect / (double) total + " (" + originalPopulationCorrect + " / " + total + ")");
-				System.out.println("PSL");
+				System.out.println("\nPSL");
 				System.out.println("Type accuracy: " + (double) pslTypeCorrect / (double) total + " (" + pslTypeCorrect + " / " + total + ")");
 				System.out.println("Violent accuracy: " + (double) pslViolentCorrect / (double) total + " (" + pslViolentCorrect + " / " + total + ")");
 				System.out.println("Population accuracy: " + (double) pslPopulationCorrect / (double) total + " (" + pslPopulationCorrect + " / " + total + ")");
+				System.out.println("\nSuppression Stats:");
+				System.out.println("Total emitted: " + emitCount + ", average original quality: " + emitQuality / (double) emitCount);
+				System.out.println("Total suppressed: " + suppressCount + ", average original quality: " + suppressQuality / (double) suppressCount);
 			}
 
 			fw.close();

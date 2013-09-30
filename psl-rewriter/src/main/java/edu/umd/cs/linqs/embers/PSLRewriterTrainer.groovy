@@ -172,16 +172,17 @@ class PSLRewriterTrainer {
 		m.add PredicateConstraint.Functional , on : type
 		m.add PredicateConstraint.Functional , on : violent
 		def initialWeight = 0.0
+		def initialHighWeight = 5.0
 
 		m.add rule: (embersType(E, T)) >> type(E, T), weight: initialWeight, squared: true
-		m.add rule: (maxType(E, T)) >> type(E, T), weight: initialWeight, squared: true
+		m.add rule: (maxType(E, T)) >> type(E, T), weight: initialHighWeight, squared: true
 		m.add rule: (secondType(E, T)) >> type(E, T), weight: initialWeight, squared: true
 
 		m.add rule: (embersViolent(E, T)) >> violent(E, T), weight: initialWeight, squared: true
-		m.add rule: (maxViolent(E, T)) >> violent(E, T), weight: initialWeight, squared: true
+		m.add rule: (maxViolent(E, T)) >> violent(E, T), weight: initialHighWeight, squared: true
 
 		m.add rule: (embersPopulation(E, T)) >> population(E, T), weight: initialWeight, squared: true
-		m.add rule: (maxPopulation(E, T)) >> population(E, T), weight: initialWeight, squared: true
+		m.add rule: (maxPopulation(E, T)) >> population(E, T), weight: initialHighWeight, squared: true
 		m.add rule: (secondPopulation(E, T)) >> population(E, T), weight: initialWeight, squared: true
 
 		for (String E : types) {
@@ -315,7 +316,7 @@ class PSLRewriterTrainer {
 
 			double quality = object.getJSONObject("match_score").getJSONObject("mean_score").getDouble("total_quality");
 
-			if (quality < SUPPRESS_THRESHOLD)
+			if (quality <= SUPPRESS_THRESHOLD)
 				insertAtom(1.0, labelDB, suppressPred, embersId);
 			else
 				insertAtom(0.0, labelDB, suppressPred, embersId);
