@@ -187,7 +187,10 @@ class PSLJointRewriter implements JSONProcessor {
 			for (GroundAtom atom : results)
 				if (best == null || atom.getValue() > best.getValue())
 					best = atom;
-			String newPop = best.getArguments()[1].toString();
+			StringAttribute newPopAttr = best.getArguments()[1];
+			
+			String newPop = newPopAttr.getValue();
+			
 
 			results = Queries.getAllAtoms(db, violPred);
 			best = null;
