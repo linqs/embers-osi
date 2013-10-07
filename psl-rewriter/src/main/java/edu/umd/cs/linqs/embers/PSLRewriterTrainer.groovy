@@ -28,6 +28,7 @@ import edu.umd.cs.psl.groovy.PSLModel
 import edu.umd.cs.psl.groovy.PredicateConstraint;
 import edu.umd.cs.psl.model.Model
 import edu.umd.cs.psl.model.argument.ArgumentType
+import edu.umd.cs.psl.model.argument.DoubleAttribute;
 import edu.umd.cs.psl.model.argument.GroundTerm
 import edu.umd.cs.psl.model.argument.StringAttribute;
 import edu.umd.cs.psl.model.argument.UniqueID
@@ -40,14 +41,14 @@ import edu.umd.cs.psl.util.database.Queries
 
 class PSLRewriterTrainer {
 
-	private DataStore data;
-	private final ConfigBundle cb;
-
+	/* Logger */
 	private final Logger log = LoggerFactory.getLogger(this.class)
-	private final ConfigManager cm = ConfigManager.getManager()
 
+	/* Config stuff */
 	private final String CONFIG_PREFIX = "pslrewriter";
-
+	private final ConfigManager cm = ConfigManager.getManager()
+	private final ConfigBundle cb = cm.getBundle(CONFIG_PREFIX);
+	
 	/* Key for model filename */
 	private final String MODEL_FILENAME = CONFIG_PREFIX + ".model";
 
@@ -57,6 +58,8 @@ class PSLRewriterTrainer {
 
 	private final double SUPPRESS_THRESHOLD;
 
+	private DataStore data;
+	
 	private Partition trainRead;
 	private Partition trainWrite;
 	private Partition trainLabel;
@@ -104,17 +107,33 @@ class PSLRewriterTrainer {
 	];
 
 	/**
-	 * Creates and initializes new training object
+	 * Creates new training object using threshold provided in config.
+	 * If no threshold provided in config, defaults to 0.
 	 * @param trainFile filename of json-formatted warnings with gsr matched entries
 	 */
 	public PSLRewriterTrainer(String trainFile) {
-		cb = cm.getBundle(CONFIG_PREFIX);
-
+		SUPPRESS_THRESHOLD = cb.getDouble("suppressthreshold", 0.0);
+		init(trainFile);
+	}
+	
+	/**
+	 * Creates new training object using given threshold.
+	 * @param trainFile filename of json-formatted warnings with gsr matched entries
+	 * @param suppressThresh threshold of quality
+	 */
+	public PSLRewriterTrainer(String trainFile, final double suppressThreshold) {
+		SUPPRESS_THRESHOLD = suppressThreshold;
+		init(trainFile)
+	}
+	
+	/**
+	 * Initializes the training object.
+	 * @param trainFile filename of json-formatted warnings with gsr matched entries
+	 */
+	private void init(String trainFile) {
 		String dbPath = cb.getString("dbpath", defaultPath);
 		String dbName = cb.getString("dbname", "psl");
 		String fullDBPath = dbPath + dbName;
-
-		SUPPRESS_THRESHOLD = cb.getDouble("suppressthreshold", 0.0);
 
 		data = new RDBMSDataStore(new H2DatabaseDriver(Type.Disk, fullDBPath, true), cb);
 
@@ -446,7 +465,13 @@ class PSLRewriterTrainer {
 	static void main(String [] args) {
 		if (args.length < 2)
 			throw new IllegalArgumentException("Must be called with training file and output file");
-		PSLRewriterTrainer trainer = new PSLRewriterTrainer(args[0]);
+		PSLRewriterTrainer trainer;
+		if (args.length >= 3) {
+			double thresh = Double.parseDouble(args[2]).doubleValue();
+			trainer = new PSLRewriterTrainer(args[0], thresh);
+		}
+		else
+			trainer = new PSLRewriterTrainer(args[0]);
 		trainer.learn();
 		trainer.outputModel(args[1]);
 	}

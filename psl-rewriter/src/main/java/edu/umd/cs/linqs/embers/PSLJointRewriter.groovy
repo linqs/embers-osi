@@ -36,14 +36,14 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class PSLJointRewriter implements JSONProcessor {
-
-	private DataStore data;
-	private final ConfigBundle cb;
-
+	
+	/* Logger */
 	private final Logger log = LoggerFactory.getLogger(this.class)
-	private final ConfigManager cm = ConfigManager.getManager()
 
+	/* Config stuff */
 	private final String CONFIG_PREFIX = "pslrewriter";
+	private final ConfigManager cm = ConfigManager.getManager();
+	private final ConfigBundle cb = cm.getBundle(CONFIG_PREFIX);
 
 	/* Key for model filename */
 	private final String MODEL_FILENAME = CONFIG_PREFIX + ".model";
@@ -52,7 +52,8 @@ class PSLJointRewriter implements JSONProcessor {
 
 	private final String BLANK = "-";
 
-
+	private DataStore data;
+	
 	private Partition read;
 	private Partition write;
 
@@ -81,7 +82,6 @@ class PSLJointRewriter implements JSONProcessor {
 	private Predicate suppressPred;
 
 	public PSLJointRewriter() {
-		cb = cm.getBundle(CONFIG_PREFIX);
 		loadConfig();
 
 		String modelFile = cb.getString("model", "");
@@ -89,7 +89,6 @@ class PSLJointRewriter implements JSONProcessor {
 	}
 
 	public PSLJointRewriter(String modelFile) {
-		cb = cm.getBundle(CONFIG_PREFIX);
 		loadConfig();
 		loadModel(modelFile);
 	}
